@@ -37,4 +37,4 @@ public class CharacterController : MonoBehaviour
         _rigidbody     = rigidbody2D;
         _camera.Follow = rigidbody2D.transform;
     }
-}
+}   
