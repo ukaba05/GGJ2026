@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class EnemyPatrolCircle : MonoBehaviour, IISolationable
@@ -133,7 +134,7 @@ public class EnemyPatrolCircle : MonoBehaviour, IISolationable
 
         if (hitColliders != null && hitColliders.Length > 0)
         {
-            foreach (Collider2D hitCollider in hitColliders)
+            foreach (Collider2D hitCollider in hitColliders.Where(h => h.transform != transform))
             {
                 if (hitCollider != null)
                 {

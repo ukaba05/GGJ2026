@@ -124,7 +124,7 @@ public class EnemyWalk : MonoBehaviour, IISolationable
         }
 
         // �g�u�˴����@�d��A����I���ê���Ϊ��a
-        var origin = transform.position + (Vector3)direction;
+        var origin = transform.position + (Vector3)direction ;
         var hit =
             Physics2D
                 .Raycast(origin, direction, visionDistance, _attackTarget);

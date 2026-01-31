@@ -7735,6 +7735,7 @@ MonoBehaviour:
   isHorizontal: 0
   wallCheckDistance: 0.5
   visionDistance: 5
+  attackCooldown: 1
   showVisionLine: 1
   normalVisionColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   lineWidth: 0.05
@@ -7983,15 +7984,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 330c32d55b207a743810df65b1e62d65, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _camera: {fileID: 519420031}
   _layoutGroup: {fileID: 606965464}
   _slot: {fileID: 1973250349168769061, guid: 0ad7b9921c64af7408ee0dfdf57712f0, type: 3}
   _arrow: {fileID: 1707916186}
-  _itemCount: 00000000000000000000000000000000
+  _itemCount: 64000000640000006400000064000000
   _player: {fileID: 2099998614}
-  _itemSprites:
-  - {fileID: 0}
-  - {fileID: 21300000, guid: 92fba49432defdf499e8881343514612, type: 3}
-  _itemImageName: ItemImage
   _invincibleItemIndex: 1
   _invincibleDuration: 3
   _blinkInterval: 0.1
