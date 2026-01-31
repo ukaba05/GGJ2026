@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyPatrolCircle : MonoBehaviour
+public class EnemyPatrolCircle : MonoBehaviour, IISolationable
 {
     [Header("���ʳ]�w")]
     [SerializeField] private float moveSpeed = 2f;
@@ -28,6 +28,8 @@ public class EnemyPatrolCircle : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private LineRenderer lineRenderer;
 
+    int _attackTarget;
+
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -44,6 +46,8 @@ public class EnemyPatrolCircle : MonoBehaviour
 
         // �]�w������
         SetupCircleRenderer();
+
+        _attackTarget |= 1 << LayerMask.NameToLayer("Player");
     }
 
     void Update()
@@ -125,13 +129,13 @@ public class EnemyPatrolCircle : MonoBehaviour
     void DetectAndAttackPlayer()
     {
         // �ϥ� OverlapCircle �˴���νd�򤺪��Ҧ��I����
-        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, detectionRadius);
+        Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, detectionRadius, _attackTarget);
 
         if (hitColliders != null && hitColliders.Length > 0)
         {
             foreach (Collider2D hitCollider in hitColliders)
             {
-                if (hitCollider != null && hitCollider.CompareTag("Player"))
+                if (hitCollider != null)
                 {
                     // �����쪱�a�A�i�����
                     Debug.Log("Enemy Patrol Circle �o�{���a�I");
@@ -249,5 +253,10 @@ public class EnemyPatrolCircle : MonoBehaviour
         // ø�s��ΰ����d��
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(transform.position, detectionRadius);
+    }
+
+    public void Isolation()
+    {
+        _attackTarget |= 1 << LayerMask.NameToLayer("Enemy");
     }
 }

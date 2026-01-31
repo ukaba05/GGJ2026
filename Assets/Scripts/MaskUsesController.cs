@@ -65,6 +65,24 @@ public class MaskUsesController : MonoBehaviour
 
         if (index == 0) {
             Investigation();
+
+            return;
+        }
+
+        if (index == 3) {
+            Debug.Log("test");
+            DoIsolation();
+
+            return;
+        }
+    }
+
+    void DoIsolation() {
+        var worldPoint = _camera.ScreenToWorldPoint(Input.mousePosition);
+        worldPoint = new Vector3(worldPoint.x, worldPoint.y, 0);
+        var overlapPoint = Physics2D.OverlapPoint(worldPoint, LayerMask.GetMask("Enemy"));
+        if (overlapPoint.TryGetComponent<IISolationable>(out var component)) {
+            component.Isolation();
         }
     }
 
@@ -72,6 +90,8 @@ public class MaskUsesController : MonoBehaviour
         var worldPoint = _camera.ScreenToWorldPoint(Input.mousePosition);
         worldPoint = new Vector3(worldPoint.x, worldPoint.y, 0);
         var overlapPoint = Physics2D.OverlapPoint(worldPoint, LayerMask.GetMask("Enemy"));
-        overlapPoint.GetComponent<LineRenderer>().enabled = true;
+        if (overlapPoint.TryGetComponent<LineRenderer>(out var component)) {
+            component.enabled = true;
+        }
     }
 }
