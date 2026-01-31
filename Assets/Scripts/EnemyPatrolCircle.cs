@@ -10,7 +10,7 @@ public class EnemyPatrolCircle : MonoBehaviour
     private int moveDirection = 1; // 1 或 -1
 
     [Header("偵測設定")]
-    [SerializeField] private float wallCheckDistance = 0.5f;
+    [SerializeField] private float wallCheckDistance = 1f;
     private LayerMask obstacleLayer; // 障礙物圖層
 
     [Header("圓形攻擊設定")]
@@ -149,20 +149,11 @@ public class EnemyPatrolCircle : MonoBehaviour
     {
         if (player == null) return;
 
-        // 檢查攻擊冷卻時間
-        if (Time.time - lastAttackTime < attackCooldown)
+        Player Damage = player.GetComponent<Player>();
+        if (Damage != null)
         {
-            return;
-        }
-
-        lastAttackTime = Time.time;
-
-        // 對玩家造成傷害
-        PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
-        if (playerHealth != null)
-        {
-            Debug.Log("Enemy Patrol Circle 攻擊玩家！");
-            playerHealth.TakeDamage();
+            Debug.Log("Enemy Rotate 攻擊玩家！");
+            Damage.TakeDamage();
         }
     }
 

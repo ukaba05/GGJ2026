@@ -6,8 +6,6 @@ public class EnemyIdle : MonoBehaviour
 {
     [Header("攻擊視錐設定")]
     [SerializeField] private float detectionRadius = 3f; // 圓形偵測範圍半徑
-    [SerializeField] private float attackCooldown = 1f; // 攻擊冷卻時間
-    private float lastAttackTime = 0f; // 上次攻擊時間
 
     [Header("視線顯示設定")]
     [SerializeField] private bool showDetectionCircle = true; // 是否顯示偵測圈
@@ -61,20 +59,11 @@ public class EnemyIdle : MonoBehaviour
     {
         if (player == null) return;
 
-        // 檢查攻擊冷卻時間
-        if (Time.time - lastAttackTime < attackCooldown)
+        Player Damage = player.GetComponent<Player>();
+        if (Damage != null)
         {
-            return;
-        }
-
-        lastAttackTime = Time.time;
-
-        // 對玩家造成傷害
-        PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
-        if (playerHealth != null)
-        {
-            Debug.Log("Enemy Idle 攻擊玩家！");
-            playerHealth.TakeDamage();
+            Debug.Log("Enemy Rotate 攻擊玩家！");
+            Damage.TakeDamage();
         }
     }
 

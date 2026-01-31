@@ -98,8 +98,6 @@ public class EnemyRotate : MonoBehaviour
         // ®g½uÀË´ú
         RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, visionDistance, combinedMask);
 
-        bool foundPlayer = false;
-
         if (hit.collider != null && hit.collider.CompareTag("Player"))
         {
             Debug.Log("Enemy Rotate µo²{ª±®a¡I§ðÀ»¶ZÂ÷: " + hit.distance);
@@ -117,18 +115,11 @@ public class EnemyRotate : MonoBehaviour
     {
         if (player == null) return;
 
-        if (Time.time - lastAttackTime < attackCooldown)
-        {
-            return;
-        }
-
-        lastAttackTime = Time.time;
-
-        PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
-        if (playerHealth != null)
+        Player Damage = player.GetComponent<Player>();
+        if (Damage != null)
         {
             Debug.Log("Enemy Rotate §ðÀ»ª±®a¡I");
-            playerHealth.TakeDamage();
+            Damage.TakeDamage();
         }
     }
 

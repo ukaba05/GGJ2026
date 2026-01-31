@@ -15,8 +15,6 @@ public class EnemyWalk : MonoBehaviour
 
     [Header("攻擊視錐設定")]
     [SerializeField] private float visionDistance = 5f;
-    [SerializeField] private float attackCooldown = 1f; // 攻擊冷卻時間
-    private float lastAttackTime = 0f; // 上次攻擊時間
 
     [Header("視線顯示設定")]
     [SerializeField] private bool showVisionLine = true; // 是否顯示視線
@@ -26,7 +24,6 @@ public class EnemyWalk : MonoBehaviour
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
     private LineRenderer lineRenderer;
-
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -158,21 +155,13 @@ public class EnemyWalk : MonoBehaviour
 
     void AttackPlayer(GameObject player)
     {
-        // 檢查攻擊冷卻時間
-        if (Time.time - lastAttackTime < attackCooldown)
-        {
-            return; // 還在冷卻中，不能攻擊
-        }
+        if (player == null) return;
 
-        // 更新上次攻擊時間
-        lastAttackTime = Time.time;
-
-        // 對玩家造成傷害
-        PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
-        if (playerHealth != null)
+        Player Damage = player.GetComponent<Player>();
+        if (Damage != null)
         {
-            Debug.Log("Enemy Walk 攻擊玩家！");
-            playerHealth.TakeDamage();
+            Debug.Log("Enemy Rotate 攻擊玩家！");
+            Damage.TakeDamage();
         }
     }
 

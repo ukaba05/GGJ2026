@@ -127,20 +127,11 @@ public class EnemyStaticVision : MonoBehaviour
     {
         if (player == null) return;
 
-        // 檢查攻擊冷卻時間
-        if (Time.time - lastAttackTime < attackCooldown)
+        Player Damage = player.GetComponent<Player>();
+        if (Damage != null)
         {
-            return;
-        }
-
-        lastAttackTime = Time.time;
-
-        // 對玩家造成傷害
-        PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
-        if (playerHealth != null)
-        {
-            Debug.Log("Enemy Static Vision 攻擊玩家！");
-            playerHealth.TakeDamage();
+            Debug.Log("Enemy Rotate 攻擊玩家！");
+            Damage.TakeDamage();
         }
     }
 
