@@ -2,37 +2,42 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyRotate : MonoBehaviour
+public class EnemyRotate : MonoBehaviour, IIsolationable, IDamageable
 {
     [Header("����]�w")]
     [SerializeField] private float rotationSpeed = 45f; // �C�����׼�
-    [SerializeField] private bool clockwise = true; // true = ���ɰw, false = �f�ɰw
-    [SerializeField] private float startAngle = 0f; // �_�l���ס]0 = �V�k�^
+
+    [SerializeField] private bool  clockwise  = true; // true = ���ɰw, false = �f�ɰw
+    [SerializeField] private float startAngle = 0f;   // �_�l���ס]0 = �V�k�^
     [SerializeField] private float sweepAngle = 360f; // ���y���׽d��]360 = ������^
 
     [Header("�������@�]�w")]
     [SerializeField] private float visionDistance = 5f; // ���u�Z��
+
     [SerializeField] private float attackCooldown = 1f; // �����N�o�ɶ�
-    private float lastAttackTime = 0f;
+    private                  float lastAttackTime = 0f;
 
     [Header("���u��ܳ]�w")]
     [SerializeField] private bool showVisionLine = true;
+
     [SerializeField] private Color visionColor = Color.yellow; // ���u�C��
-    [SerializeField] private float lineWidth = 0.05f;
+    [SerializeField] private float lineWidth   = 0.05f;
 
-    private Animator animator;
+    [SerializeField]
+    ParticleSystem _particle;
+
+    private Animator       animator;
     private SpriteRenderer spriteRenderer;
-    private LineRenderer lineRenderer;
-    private float currentVisionAngle = 0f; // ���u��e����
+    private LineRenderer   lineRenderer;
+    private float          currentVisionAngle = 0f; // ���u��e����
+    int                    _attackTarget;
 
-    void Start()
-    {
-        animator = GetComponent<Animator>();
+    void Start() {
+        animator       = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
         // �}�l���� idle �� walk �ʵe
-        if (animator != null)
-        {
+        if (animator != null) {
             animator.Play("Enemy idle"); // �� "Enemy walk"
         }
 
@@ -41,10 +46,11 @@ public class EnemyRotate : MonoBehaviour
 
         // ��l���u����
         currentVisionAngle = startAngle;
+
+        _attackTarget = 1 << LayerMask.NameToLayer("Player");
     }
 
-    void Update()
-    {
+    void Update() {
         // ������u���ס]�����ਤ�⥻���^
         RotateVision();
 
@@ -52,116 +58,95 @@ public class EnemyRotate : MonoBehaviour
         DetectAndAttackPlayer();
     }
 
-    void RotateVision()
-    {
+    void RotateVision() {
         // �p�����
         float rotationThisFrame = rotationSpeed * Time.deltaTime;
-        if (!clockwise)
-        {
+        if (!clockwise) {
             rotationThisFrame = -rotationThisFrame;
         }
 
         currentVisionAngle += rotationThisFrame;
 
         // �p�G�]�w�F���y�d�򭭨�]���O 360 �ס^
-        if (sweepAngle < 360f)
-        {
+        if (sweepAngle < 360f) {
             // �b�d�򤺨Ӧ^�\��
             float minAngle = startAngle;
             float maxAngle = startAngle + sweepAngle;
 
-            if (currentVisionAngle > maxAngle || currentVisionAngle < minAngle)
-            {
+            if (currentVisionAngle > maxAngle || currentVisionAngle < minAngle) {
                 // �����V
-                clockwise = !clockwise;
+                clockwise          = !clockwise;
                 currentVisionAngle = Mathf.Clamp(currentVisionAngle, minAngle, maxAngle);
             }
         }
     }
 
-    void DetectAndAttackPlayer()
-    {
+    void DetectAndAttackPlayer() {
         // ���u��V�ھڷ�e���׭p��]���̿ફ�����^
-        float angleInRadians = currentVisionAngle * Mathf.Deg2Rad;
-        Vector2 direction = new Vector2(Mathf.Cos(angleInRadians), Mathf.Sin(angleInRadians));
+        float   angleInRadians = currentVisionAngle * Mathf.Deg2Rad;
+        Vector2 direction      = new Vector2(Mathf.Cos(angleInRadians), Mathf.Sin(angleInRadians));
 
-        // �Ыإ]�t��ê���M���a�� LayerMask
-        LayerMask obstacleLayer = LayerMask.GetMask("obstacle");
-        int playerLayerIndex = LayerMask.NameToLayer("Player");
-        LayerMask combinedMask = obstacleLayer;
-
-        if (playerLayerIndex >= 0)
-        {
-            combinedMask |= (1 << playerLayerIndex);
-        }
+        var origin       = transform.position + (Vector3)direction;
+        var obstacleLayerMask = 1 << LayerMask.NameToLayer("obstacle");
+        var hitObstacle  = Physics2D.Raycast(origin, direction, visionDistance, obstacleLayerMask);
+        var realDistance = hitObstacle ? hitObstacle.distance : visionDistance;
 
         // �g�u�˴�
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, visionDistance, combinedMask);
+        var allHits = Physics2D.RaycastAll(origin, direction, realDistance, _attackTarget);
 
         bool foundPlayer = false;
-
-        if (hit.collider != null && hit.collider.CompareTag("Player"))
-        {
-            Debug.Log("Enemy Rotate �o�{���a�I�����Z��: " + hit.distance);
-            AttackPlayer(hit.collider.gameObject);
+        if (allHits != null && allHits.Length > 0) {
+            foreach (var hit in allHits) {
+                if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Player")) foundPlayer = true;
+                Attack(hit.transform.gameObject);
+                Debug.Log("Enemy Rotate " + allHits.Length);
+            }
         }
 
         // ��s���u���
-        UpdateVisionLine(direction, hit);
+        UpdateVisionLine(direction, realDistance);
 
         // Debug ø�s
-        Debug.DrawRay(transform.position, direction * visionDistance, Color.yellow);
+        Debug.DrawRay(transform.position, direction * realDistance, Color.yellow);
     }
 
-    void AttackPlayer(GameObject player)
-    {
-        if (player == null) return;
-
-        if (Time.time - lastAttackTime < attackCooldown)
-        {
-            return;
+    void Attack(GameObject target) {
+        if (target.TryGetComponent<IDamageable>(out var component)) {
+            component.Damage();
         }
-
-        lastAttackTime = Time.time;
     }
 
-    void SetupLineRenderer()
-    {
+    void SetupLineRenderer() {
         lineRenderer = GetComponent<LineRenderer>();
-        if (lineRenderer == null)
-        {
+        if (lineRenderer == null) {
             lineRenderer = gameObject.AddComponent<LineRenderer>();
         }
 
         if (lineRenderer == null) return;
 
-        lineRenderer.startWidth = lineWidth;
-        lineRenderer.endWidth = lineWidth;
+        lineRenderer.startWidth    = lineWidth;
+        lineRenderer.endWidth      = lineWidth;
         lineRenderer.positionCount = 2;
         lineRenderer.useWorldSpace = true;
-        lineRenderer.enabled = false;
+        lineRenderer.enabled       = false;
 
         Material lineMaterial = new Material(Shader.Find("Sprites/Default"));
-        if (lineMaterial != null)
-        {
+        if (lineMaterial != null) {
             lineRenderer.material = lineMaterial;
         }
 
-        lineRenderer.startColor = visionColor;
-        lineRenderer.endColor = visionColor;
+        lineRenderer.startColor       = visionColor;
+        lineRenderer.endColor         = visionColor;
         lineRenderer.sortingLayerName = "Default";
-        lineRenderer.sortingOrder = 10;
+        lineRenderer.sortingOrder     = 10;
 
-        if (!showVisionLine)
-        {
+        if (!showVisionLine) {
             lineRenderer.enabled = false;
         }
     }
 
-    void UpdateVisionLine(Vector2 direction, RaycastHit2D hit)
-    {
-        if (lineRenderer == null || !showVisionLine)
-        {
+    void UpdateVisionLine(Vector2 direction, float distance) {
+        if (lineRenderer == null || !showVisionLine) {
             return;
         }
 
@@ -169,39 +154,40 @@ public class EnemyRotate : MonoBehaviour
         lineRenderer.SetPosition(0, transform.position);
 
         // ���I
-        Vector3 endPoint;
-        if (hit.collider != null)
-        {
-            endPoint = hit.point;
-        }
-        else
-        {
-            endPoint = (Vector2)transform.position + direction * visionDistance;
-        }
+        Vector3 endPoint = (Vector2)transform.position + direction * distance;
+
+
         lineRenderer.SetPosition(1, endPoint);
     }
 
-    void OnDrawGizmosSelected()
-    {
+    void OnDrawGizmosSelected() {
         // ø�s���@�]�ϥε��u���ס^
-        float angleInRadians = currentVisionAngle * Mathf.Deg2Rad;
-        Vector2 direction = new Vector2(Mathf.Cos(angleInRadians), Mathf.Sin(angleInRadians));
+        float   angleInRadians = currentVisionAngle * Mathf.Deg2Rad;
+        Vector2 direction      = new Vector2(Mathf.Cos(angleInRadians), Mathf.Sin(angleInRadians));
 
         Gizmos.color = Color.yellow;
         Gizmos.DrawRay(transform.position, direction * visionDistance);
 
         // �p�G�����y�d�򭭨�Aø�s���y�d��
-        if (sweepAngle < 360f)
-        {
+        if (sweepAngle < 360f) {
             Gizmos.color = Color.cyan;
             float startRad = startAngle * Mathf.Deg2Rad;
-            float endRad = (startAngle + sweepAngle) * Mathf.Deg2Rad;
+            float endRad   = (startAngle + sweepAngle) * Mathf.Deg2Rad;
 
             Vector2 startDir = new Vector2(Mathf.Cos(startRad), Mathf.Sin(startRad));
-            Vector2 endDir = new Vector2(Mathf.Cos(endRad), Mathf.Sin(endRad));
+            Vector2 endDir   = new Vector2(Mathf.Cos(endRad), Mathf.Sin(endRad));
 
             Gizmos.DrawRay(transform.position, startDir * visionDistance);
             Gizmos.DrawRay(transform.position, endDir * visionDistance);
         }
+    }
+
+    public void Isolation() {
+        _attackTarget |= 1 << LayerMask.NameToLayer("Enemy");
+    }
+
+    public void Damage() {
+        Instantiate(_particle, transform.position, Quaternion.identity);
+        Destroy(gameObject);
     }
 }

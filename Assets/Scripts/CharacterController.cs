@@ -1,7 +1,7 @@
 using Cinemachine;
 using UnityEngine;
 
-public class CharacterController : MonoBehaviour
+public class CharacterController : MonoBehaviour, IDamageable
 {
     [SerializeField]
     float _speed;
@@ -11,7 +11,10 @@ public class CharacterController : MonoBehaviour
 
     [SerializeField]
     CinemachineVirtualCamera _camera;
-    
+
+    [SerializeField]
+    ParticleSystem _particle;
+
     void FixedUpdate() {
         var direction = MapInputToDirection();
         _rigidbody.velocity = direction * _speed;
@@ -36,4 +39,9 @@ public class CharacterController : MonoBehaviour
         _rigidbody     = rigidbody2D;
         _camera.Follow = rigidbody2D.transform;
     }
-}   
+
+    public void Damage() {
+        Instantiate(_particle, transform.position, Quaternion.identity);
+        Destroy(gameObject);
+    }
+}

@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-public class EnemyStaticVision : MonoBehaviour, IISolationable
+public class EnemyStaticVision : MonoBehaviour, IIsolationable, IDamageable
 {
     [Header("���@�����]�w")]
     [SerializeField] private float visionDistance = 5f; // ���u�Z��
@@ -16,6 +17,9 @@ public class EnemyStaticVision : MonoBehaviour, IISolationable
 
     [SerializeField] private Color visionColor = Color.yellow;
     [SerializeField] private float lineWidth   = 0.1f;
+
+    [SerializeField]
+    ParticleSystem _particle;
 
     private Animator       animator;
     private SpriteRenderer spriteRenderer;
@@ -95,19 +99,22 @@ public class EnemyStaticVision : MonoBehaviour, IISolationable
     void DetectAndAttackPlayer() {
         Vector2 direction = GetVisionDirectionVector();
 
-        var origin = transform.position + (Vector3)direction;
+        var origin            = transform.position + (Vector3)direction;
+        var obstacleLayerMask = 1 << LayerMask.NameToLayer("obstacle");
+        var hitObstacle       = Physics2D.Raycast(origin, direction, visionDistance, obstacleLayerMask);
+        var realDistance      = hitObstacle ? hitObstacle.distance : visionDistance;
         var allHits =
             Physics2D
-                .RaycastAll(origin, direction, visionDistance, _attackTarget);
+                .RaycastAll(origin, direction, realDistance, _attackTarget);
 
 
         bool foundPlayer = false;
 
         if (allHits != null && allHits.Length > 0) {
             foreach (var hit in allHits) {
-                AttackPlayer(hit.transform.gameObject);
+                if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Player")) foundPlayer = true;
+                Attack(hit.transform.gameObject);
                 Debug.Log("Enemy Static " + allHits.Length);
-                foundPlayer = true;
             }
         }
 
@@ -115,18 +122,13 @@ public class EnemyStaticVision : MonoBehaviour, IISolationable
         UpdateVisionLine(direction);
 
         // Debug ø�s
-        Debug.DrawRay(transform.position, direction * visionDistance, foundPlayer ? Color.red : Color.yellow);
+        Debug.DrawRay(transform.position, direction * realDistance, foundPlayer ? Color.red : Color.yellow);
     }
 
-    void AttackPlayer(GameObject player) {
-        if (player == null) return;
-
-        // �ˬd�����N�o�ɶ�
-        if (Time.time - lastAttackTime < attackCooldown) {
-            return;
+    void Attack(GameObject target) {
+        if (target.TryGetComponent<IDamageable>(out var component)) {
+            component.Damage();
         }
-
-        lastAttackTime = Time.time;
     }
 
     void SetupLineRenderer() {
@@ -194,5 +196,10 @@ public class EnemyStaticVision : MonoBehaviour, IISolationable
     public void Isolation() {
         Debug.Log("test");
         _attackTarget |= 1 << LayerMask.NameToLayer("Enemy");
+    }
+
+    public void Damage() {
+        Instantiate(_particle, transform.position, Quaternion.identity);
+        Destroy(gameObject);
     }
 }

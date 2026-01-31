@@ -1,4 +1,4 @@
-﻿public interface IISolationable
+﻿public interface IIsolationable
 {
     public void Isolation();
 }

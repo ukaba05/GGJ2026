@@ -135,7 +135,7 @@ public class MaskUsesController : MonoBehaviour
             var worldPoint = _camera.ScreenToWorldPoint(Input.mousePosition);
             worldPoint = new Vector3(worldPoint.x, worldPoint.y, 0);
             var overlapPoint = Physics2D.OverlapPoint(worldPoint, LayerMask.GetMask("Enemy"));
-            if (overlapPoint.TryGetComponent<IISolationable>(out var component)) {
+            if (overlapPoint.TryGetComponent<IIsolationable>(out var component)) {
                 component.Isolation();
             }
         }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class EnemyIdle : MonoBehaviour, IISolationable
+public class EnemyIdle : MonoBehaviour, IIsolationable, IDamageable
 {
     [Header("�������@�]�w")]
     [SerializeField] private float detectionRadius = 3f; // ��ΰ����d��b�|
@@ -18,6 +18,9 @@ public class EnemyIdle : MonoBehaviour, IISolationable
     [SerializeField] private Color attackCircleColor = new Color(1, 0, 0, 0.9f); // �����ɶ���C��
     [SerializeField] private int   circleSegments    = 50;                       // ����ӫ�
     [SerializeField] private float lineWidth         = 0.15f;                    // ���u���e��
+
+    [SerializeField]
+    ParticleSystem _particle;
 
     private Animator     animator;
     private LineRenderer lineRenderer;
@@ -43,12 +46,9 @@ public class EnemyIdle : MonoBehaviour, IISolationable
 
         if (hitColliders != null && hitColliders.Length > 0) {
             foreach (Collider2D hitCollider in hitColliders.Where(h => h.transform != transform)) {
-                // �����쪱�a�A�i�����
+                if (hitCollider.transform.gameObject.layer == LayerMask.NameToLayer("Player")) foundPlayer = true;
                 Debug.Log("Enemy Idle �o�{���a�I��ڰ����b�|: " + detectionRadius);
-                AttackPlayer(hitCollider.gameObject);
-                foundPlayer = true;
-
-                break;
+                Attack(hitCollider.gameObject);
             }
         }
 
@@ -56,15 +56,10 @@ public class EnemyIdle : MonoBehaviour, IISolationable
         UpdateCircleDisplay(foundPlayer);
     }
 
-    void AttackPlayer(GameObject player) {
-        if (player == null) return;
-
-        // �ˬd�����N�o�ɶ�
-        if (Time.time - lastAttackTime < attackCooldown) {
-            return;
+    void Attack(GameObject target) {
+        if (target.TryGetComponent<IDamageable>(out var component)) {
+            component.Damage();
         }
-
-        lastAttackTime = Time.time;
     }
 
     void SetupCircleRenderer() {
@@ -145,5 +140,10 @@ public class EnemyIdle : MonoBehaviour, IISolationable
 
     public void Isolation() {
         _attackTarget |= 1 << LayerMask.NameToLayer("Enemy");
+    }
+
+    public void Damage() {
+        Instantiate(_particle, transform.position, Quaternion.identity);
+        Destroy(gameObject);
     }
 }

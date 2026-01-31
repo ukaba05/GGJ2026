@@ -1,7 +1,8 @@
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 
-public class EnemyWalk : MonoBehaviour, IISolationable
+public class EnemyWalk : MonoBehaviour, IIsolationable, IDamageable
 {
     [Header("���ʳ]�w")]
     [SerializeField] private float moveSpeed = 2f;
@@ -25,6 +26,9 @@ public class EnemyWalk : MonoBehaviour, IISolationable
 
     [SerializeField] private Color normalVisionColor = Color.yellow; // ���`���u�C��
     [SerializeField] private float lineWidth         = 0.05f;        // �u���e��
+
+    [SerializeField]
+    ParticleSystem _particle;
 
     private Rigidbody2D    rb;
     private SpriteRenderer spriteRenderer;
@@ -124,19 +128,21 @@ public class EnemyWalk : MonoBehaviour, IISolationable
         }
 
         // �g�u�˴����@�d��A����I���ê���Ϊ��a
-        var origin = transform.position + (Vector3)direction;
+        var origin            = transform.position + (Vector3)direction;
+        var obstacleLayerMask = 1 << LayerMask.NameToLayer("obstacle");
+        var hitObstacle       = Physics2D.Raycast(origin, direction, visionDistance, obstacleLayerMask);
+        var realDistance      = hitObstacle ? hitObstacle.distance : visionDistance;
+
         var allHits =
-            Physics2D
-                .RaycastAll(origin, direction, visionDistance, _attackTarget);
+            Physics2D.RaycastAll(origin, direction, realDistance, _attackTarget);
 
 
         bool foundPlayer = false;
-
         if (allHits != null && allHits.Length > 0) {
             foreach (var hit in allHits) {
-                AttackPlayer(hit.transform.gameObject);
+                if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Player")) foundPlayer = true;
+                Attack(hit.transform.gameObject);
                 Debug.Log("Enemy Walk " + allHits.Length);
-                foundPlayer = true;
             }
         }
 
@@ -145,17 +151,13 @@ public class EnemyWalk : MonoBehaviour, IISolationable
         UpdateVisionLine(direction);
 
         // ø�s���@�d��]�Ȧb Scene ���Ϥ��i���^
-        Debug.DrawRay(origin, direction * visionDistance, foundPlayer ? Color.red : Color.yellow);
+        Debug.DrawRay(origin, direction * realDistance, foundPlayer ? Color.red : Color.yellow);
     }
 
-    void AttackPlayer(GameObject player) {
-        // �ˬd�����N�o�ɶ�
-        if (Time.time - lastAttackTime < attackCooldown) {
-            return; // �٦b�N�o���A�������
+    void Attack(GameObject target) {
+        if (target.TryGetComponent<IDamageable>(out var component)) {
+            component.Damage();
         }
-
-        // ��s�W�������ɶ�
-        lastAttackTime = Time.time;
     }
 
     // �b Scene ���Ϥ�ø�s���@�d��
@@ -218,5 +220,10 @@ public class EnemyWalk : MonoBehaviour, IISolationable
 
     public void Isolation() {
         _attackTarget |= 1 << LayerMask.NameToLayer("Enemy");
+    }
+
+    public void Damage() {
+        Instantiate(_particle, transform.position, Quaternion.identity);
+        Destroy(gameObject);
     }
 }
