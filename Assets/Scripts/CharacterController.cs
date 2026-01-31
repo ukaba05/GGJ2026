@@ -13,7 +13,7 @@ public class CharacterController : MonoBehaviour
     [SerializeField]
     CinemachineVirtualCamera _camera;
     
-    void Update() {
+    void FixedUpdate() {
         var direction = MapInputToDirection();
         _rigidbody.velocity = direction * _speed;
     }
