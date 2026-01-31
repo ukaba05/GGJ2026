@@ -94,24 +94,28 @@ public class EnemyStaticVision : MonoBehaviour, IISolationable
 
     void DetectAndAttackPlayer() {
         Vector2 direction = GetVisionDirectionVector();
-        
-        var origin = transform.position + (Vector3)direction ;
-        // �g�u�˴����@�d��
-        RaycastHit2D hit = Physics2D.Raycast(origin, direction, visionDistance, _attackTarget);
-        Debug.Log(_attackTarget);
-        
-        if (hit.collider != null) {
-            // ���u�������a�A�i�����
-            Debug.Log("Enemy Static Vision �o�{���a�I�����Z��: " + hit.distance);
-            AttackPlayer(hit.collider.gameObject);
+
+        var origin = transform.position + (Vector3)direction;
+        var allHits =
+            Physics2D
+                .RaycastAll(origin, direction, visionDistance, _attackTarget);
+
+
+        bool foundPlayer = false;
+
+        if (allHits != null && allHits.Length > 0) {
+            foreach (var hit in allHits) {
+                AttackPlayer(hit.transform.gameObject);
+                Debug.Log("Enemy Static " + allHits.Length);
+                foundPlayer = true;
+            }
         }
 
         // ��s���u���
-        UpdateVisionLine(direction, hit);
+        UpdateVisionLine(direction);
 
         // Debug ø�s
-        float drawDistance = hit.collider != null ? hit.distance : visionDistance;
-        Debug.DrawRay(transform.position, direction * drawDistance, Color.yellow);
+        Debug.DrawRay(transform.position, direction * visionDistance, foundPlayer ? Color.red : Color.yellow);
     }
 
     void AttackPlayer(GameObject player) {
@@ -159,7 +163,7 @@ public class EnemyStaticVision : MonoBehaviour, IISolationable
         }
     }
 
-    void UpdateVisionLine(Vector2 direction, RaycastHit2D hit) {
+    void UpdateVisionLine(Vector2 direction) {
         if (lineRenderer == null || !showVisionLine) {
             return;
         }
@@ -168,13 +172,8 @@ public class EnemyStaticVision : MonoBehaviour, IISolationable
         lineRenderer.SetPosition(0, transform.position);
 
         // �]�w���I
-        Vector3 endPoint;
-        if (hit.collider != null) {
-            endPoint = hit.point;
-        }
-        else {
-            endPoint = (Vector2)transform.position + direction * visionDistance;
-        }
+        Vector3 endPoint = (Vector2)transform.position + direction * visionDistance;
+
 
         lineRenderer.SetPosition(1, endPoint);
     }
