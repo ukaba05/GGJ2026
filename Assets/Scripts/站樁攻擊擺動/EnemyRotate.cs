@@ -4,57 +4,57 @@ using UnityEngine;
 
 public class EnemyRotate : MonoBehaviour
 {
-    [Header("±ÛÂà³]©w")]
-    [SerializeField] private float rotationSpeed = 45f; // ¨C¬í±ÛÂà«×¼Æ
-    [SerializeField] private bool clockwise = true; // true = ¶¶®É°w, false = °f®É°w
-    [SerializeField] private float startAngle = 0f; // °_©l¨¤«×¡]0 = ¦V¥k¡^
-    [SerializeField] private float sweepAngle = 360f; // ±½´y¨¤«×½d³ò¡]360 = §¹¾ã¶ê°é¡^
+    [Header("ï¿½ï¿½ï¿½ï¿½]ï¿½w")]
+    [SerializeField] private float rotationSpeed = 45f; // ï¿½Cï¿½ï¿½ï¿½ï¿½ï¿½×¼ï¿½
+    [SerializeField] private bool clockwise = true; // true = ï¿½ï¿½ï¿½É°w, false = ï¿½fï¿½É°w
+    [SerializeField] private float startAngle = 0f; // ï¿½_ï¿½lï¿½ï¿½ï¿½×¡]0 = ï¿½Vï¿½kï¿½^
+    [SerializeField] private float sweepAngle = 360f; // ï¿½ï¿½ï¿½yï¿½ï¿½ï¿½×½dï¿½ï¿½]360 = ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½^
 
-    [Header("§ðÀ»µøÀ@³]©w")]
-    [SerializeField] private float visionDistance = 5f; // µø½u¶ZÂ÷
-    [SerializeField] private float attackCooldown = 1f; // §ðÀ»§N«o®É¶¡
+    [Header("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½@ï¿½]ï¿½w")]
+    [SerializeField] private float visionDistance = 5f; // ï¿½ï¿½ï¿½uï¿½Zï¿½ï¿½
+    [SerializeField] private float attackCooldown = 1f; // ï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½oï¿½É¶ï¿½
     private float lastAttackTime = 0f;
 
-    [Header("µø½uÅã¥Ü³]©w")]
+    [Header("ï¿½ï¿½ï¿½uï¿½ï¿½Ü³]ï¿½w")]
     [SerializeField] private bool showVisionLine = true;
-    [SerializeField] private Color visionColor = Color.yellow; // µø½uÃC¦â
+    [SerializeField] private Color visionColor = Color.yellow; // ï¿½ï¿½ï¿½uï¿½Cï¿½ï¿½
     [SerializeField] private float lineWidth = 0.05f;
 
     private Animator animator;
     private SpriteRenderer spriteRenderer;
     private LineRenderer lineRenderer;
-    private float currentVisionAngle = 0f; // µø½u·í«e¨¤«×
+    private float currentVisionAngle = 0f; // ï¿½ï¿½ï¿½uï¿½ï¿½eï¿½ï¿½ï¿½ï¿½
 
     void Start()
     {
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
-        // ¶}©l°õ¦æ idle ©Î walk °Êµe
+        // ï¿½}ï¿½lï¿½ï¿½ï¿½ï¿½ idle ï¿½ï¿½ walk ï¿½Êµe
         if (animator != null)
         {
-            animator.Play("Enemy idle"); // ©Î "Enemy walk"
+            animator.Play("Enemy idle"); // ï¿½ï¿½ "Enemy walk"
         }
 
-        // ³]©w LineRenderer
+        // ï¿½]ï¿½w LineRenderer
         SetupLineRenderer();
 
-        // ªì©lµø½u¨¤«×
+        // ï¿½ï¿½lï¿½ï¿½ï¿½uï¿½ï¿½ï¿½ï¿½
         currentVisionAngle = startAngle;
     }
 
     void Update()
     {
-        // ±ÛÂàµø½u¨¤«×¡]¤£±ÛÂà¨¤¦â¥»¨­¡^
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½uï¿½ï¿½ï¿½×¡]ï¿½ï¿½ï¿½ï¿½ï¿½à¨¤ï¿½â¥»ï¿½ï¿½ï¿½^
         RotateVision();
 
-        // ÀË´úµøÀ@½d³ò¤ºªºª±®a¨Ã§ðÀ»
+        // ï¿½Ë´ï¿½ï¿½ï¿½ï¿½@ï¿½dï¿½ò¤ºªï¿½ï¿½ï¿½ï¿½aï¿½Ã§ï¿½ï¿½ï¿½
         DetectAndAttackPlayer();
     }
 
     void RotateVision()
     {
-        // ­pºâ±ÛÂà
+        // ï¿½pï¿½ï¿½ï¿½ï¿½ï¿½
         float rotationThisFrame = rotationSpeed * Time.deltaTime;
         if (!clockwise)
         {
@@ -63,16 +63,16 @@ public class EnemyRotate : MonoBehaviour
 
         currentVisionAngle += rotationThisFrame;
 
-        // ¦pªG³]©w¤F±½´y½d³ò­­¨î¡]¤£¬O 360 «×¡^
+        // ï¿½pï¿½Gï¿½]ï¿½wï¿½Fï¿½ï¿½ï¿½yï¿½dï¿½ò­­¨ï¿½]ï¿½ï¿½ï¿½O 360 ï¿½×¡^
         if (sweepAngle < 360f)
         {
-            // ¦b½d³ò¤º¨Ó¦^Â\°Ê
+            // ï¿½bï¿½dï¿½ò¤º¨Ó¦^ï¿½\ï¿½ï¿½
             float minAngle = startAngle;
             float maxAngle = startAngle + sweepAngle;
 
             if (currentVisionAngle > maxAngle || currentVisionAngle < minAngle)
             {
-                // ¤ÏÂà¤è¦V
+                // ï¿½ï¿½ï¿½ï¿½ï¿½V
                 clockwise = !clockwise;
                 currentVisionAngle = Mathf.Clamp(currentVisionAngle, minAngle, maxAngle);
             }
@@ -81,11 +81,11 @@ public class EnemyRotate : MonoBehaviour
 
     void DetectAndAttackPlayer()
     {
-        // µø½u¤è¦V®Ú¾Ú·í«e¨¤«×­pºâ¡]¤£¨Ì¿àª«Åé±ÛÂà¡^
+        // ï¿½ï¿½ï¿½uï¿½ï¿½Vï¿½Ú¾Ú·ï¿½eï¿½ï¿½ï¿½×­pï¿½ï¿½]ï¿½ï¿½ï¿½Ì¿àª«ï¿½ï¿½ï¿½ï¿½ï¿½^
         float angleInRadians = currentVisionAngle * Mathf.Deg2Rad;
         Vector2 direction = new Vector2(Mathf.Cos(angleInRadians), Mathf.Sin(angleInRadians));
 
-        // ³Ð«Ø¥]§t»ÙÃªª«©Mª±®aªº LayerMask
+        // ï¿½Ð«Ø¥]ï¿½tï¿½ï¿½Ãªï¿½ï¿½ï¿½Mï¿½ï¿½ï¿½aï¿½ï¿½ LayerMask
         LayerMask obstacleLayer = LayerMask.GetMask("obstacle");
         int playerLayerIndex = LayerMask.NameToLayer("Player");
         LayerMask combinedMask = obstacleLayer;
@@ -95,21 +95,21 @@ public class EnemyRotate : MonoBehaviour
             combinedMask |= (1 << playerLayerIndex);
         }
 
-        // ®g½uÀË´ú
+        // ï¿½gï¿½uï¿½Ë´ï¿½
         RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, visionDistance, combinedMask);
 
         bool foundPlayer = false;
 
         if (hit.collider != null && hit.collider.CompareTag("Player"))
         {
-            Debug.Log("Enemy Rotate µo²{ª±®a¡I§ðÀ»¶ZÂ÷: " + hit.distance);
+            Debug.Log("Enemy Rotate ï¿½oï¿½{ï¿½ï¿½ï¿½aï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½Zï¿½ï¿½: " + hit.distance);
             AttackPlayer(hit.collider.gameObject);
         }
 
-        // §ó·sµø½uÅã¥Ü
+        // ï¿½ï¿½sï¿½ï¿½ï¿½uï¿½ï¿½ï¿½
         UpdateVisionLine(direction, hit);
 
-        // Debug Ã¸»s
+        // Debug Ã¸ï¿½s
         Debug.DrawRay(transform.position, direction * visionDistance, Color.yellow);
     }
 
@@ -123,13 +123,6 @@ public class EnemyRotate : MonoBehaviour
         }
 
         lastAttackTime = Time.time;
-
-        PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
-        if (playerHealth != null)
-        {
-            Debug.Log("Enemy Rotate §ðÀ»ª±®a¡I");
-            playerHealth.TakeDamage();
-        }
     }
 
     void SetupLineRenderer()
@@ -146,6 +139,7 @@ public class EnemyRotate : MonoBehaviour
         lineRenderer.endWidth = lineWidth;
         lineRenderer.positionCount = 2;
         lineRenderer.useWorldSpace = true;
+        lineRenderer.enabled = false;
 
         Material lineMaterial = new Material(Shader.Find("Sprites/Default"));
         if (lineMaterial != null)
@@ -171,12 +165,10 @@ public class EnemyRotate : MonoBehaviour
             return;
         }
 
-        lineRenderer.enabled = true;
-
-        // °_ÂI
+        // ï¿½_ï¿½I
         lineRenderer.SetPosition(0, transform.position);
 
-        // ²×ÂI
+        // ï¿½ï¿½ï¿½I
         Vector3 endPoint;
         if (hit.collider != null)
         {
@@ -191,14 +183,14 @@ public class EnemyRotate : MonoBehaviour
 
     void OnDrawGizmosSelected()
     {
-        // Ã¸»sµøÀ@¡]¨Ï¥Îµø½u¨¤«×¡^
+        // Ã¸ï¿½sï¿½ï¿½ï¿½@ï¿½]ï¿½Ï¥Îµï¿½ï¿½uï¿½ï¿½ï¿½×¡^
         float angleInRadians = currentVisionAngle * Mathf.Deg2Rad;
         Vector2 direction = new Vector2(Mathf.Cos(angleInRadians), Mathf.Sin(angleInRadians));
 
         Gizmos.color = Color.yellow;
         Gizmos.DrawRay(transform.position, direction * visionDistance);
 
-        // ¦pªG¦³±½´y½d³ò­­¨î¡AÃ¸»s±½´y½d³ò
+        // ï¿½pï¿½Gï¿½ï¿½ï¿½ï¿½ï¿½yï¿½dï¿½ò­­¨ï¿½AÃ¸ï¿½sï¿½ï¿½ï¿½yï¿½dï¿½ï¿½
         if (sweepAngle < 360f)
         {
             Gizmos.color = Color.cyan;

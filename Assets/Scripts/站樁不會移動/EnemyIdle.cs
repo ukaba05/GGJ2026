@@ -4,36 +4,36 @@ using UnityEngine;
 
 public class EnemyIdle : MonoBehaviour
 {
-    [Header("§ðÀ»µøÀ@³]©w")]
-    [SerializeField] private float detectionRadius = 3f; // ¶ê§Î°»´ú½d³ò¥b®|
-    [SerializeField] private float attackCooldown = 1f; // §ðÀ»§N«o®É¶¡
-    private float lastAttackTime = 0f; // ¤W¦¸§ðÀ»®É¶¡
+    [Header("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½@ï¿½]ï¿½w")]
+    [SerializeField] private float detectionRadius = 3f; // ï¿½ï¿½Î°ï¿½ï¿½ï¿½ï¿½dï¿½ï¿½bï¿½|
+    [SerializeField] private float attackCooldown = 1f; // ï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½oï¿½É¶ï¿½
+    private float lastAttackTime = 0f; // ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É¶ï¿½
 
-    [Header("µø½uÅã¥Ü³]©w")]
-    [SerializeField] private bool showDetectionCircle = true; // ¬O§_Åã¥Ü°»´ú°é
-    [SerializeField] private Color normalCircleColor = new Color(0, 1, 1, 0.8f); // ¥¿±`¶ê°éÃC¦â
-    [SerializeField] private Color attackCircleColor = new Color(1, 0, 0, 0.9f); // §ðÀ»®É¶ê°éÃC¦â
-    [SerializeField] private int circleSegments = 50; // ¶ê°éºë²Ó«×
-    [SerializeField] private float lineWidth = 0.15f; // ¶ê°é½u±ø¼e«×
+    [Header("ï¿½ï¿½ï¿½uï¿½ï¿½Ü³]ï¿½w")]
+    [SerializeField] private bool showDetectionCircle = true; // ï¿½Oï¿½_ï¿½ï¿½Ü°ï¿½ï¿½ï¿½ï¿½ï¿½
+    [SerializeField] private Color normalCircleColor = new Color(0, 1, 1, 0.8f); // ï¿½ï¿½ï¿½`ï¿½ï¿½ï¿½ï¿½Cï¿½ï¿½
+    [SerializeField] private Color attackCircleColor = new Color(1, 0, 0, 0.9f); // ï¿½ï¿½ï¿½ï¿½ï¿½É¶ï¿½ï¿½ï¿½Cï¿½ï¿½
+    [SerializeField] private int circleSegments = 50; // ï¿½ï¿½ï¿½ï¿½Ó«ï¿½
+    [SerializeField] private float lineWidth = 0.15f; // ï¿½ï¿½ï¿½uï¿½ï¿½ï¿½eï¿½ï¿½
 
     private Animator animator;
     private LineRenderer lineRenderer;
 
     void Start()
     {
-        // ³]©w LineRenderer Ã¸»s¶ê°é
+        // ï¿½]ï¿½w LineRenderer Ã¸ï¿½sï¿½ï¿½ï¿½
         SetupCircleRenderer();
     }
 
     void Update()
     {
-        // °»´ú¶ê§Î½d³ò¤ºªºª±®a¨Ã§ðÀ»
+        // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î½dï¿½ò¤ºªï¿½ï¿½ï¿½ï¿½aï¿½Ã§ï¿½ï¿½ï¿½
         DetectAndAttackPlayer();
     }
 
     void DetectAndAttackPlayer()
     {
-        // ¨Ï¥Î OverlapCircle ÀË´ú¶ê§Î½d³ò¤ºªº©Ò¦³¸I¼²Åé
+        // ï¿½Ï¥ï¿½ OverlapCircle ï¿½Ë´ï¿½ï¿½ï¿½Î½dï¿½ò¤ºªï¿½ï¿½Ò¦ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½
         Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, detectionRadius);
 
         bool foundPlayer = false;
@@ -44,8 +44,8 @@ public class EnemyIdle : MonoBehaviour
             {
                 if (hitCollider != null && hitCollider.CompareTag("Player"))
                 {
-                    // °»´ú¨ìª±®a¡A¶i¦æ§ðÀ»
-                    Debug.Log("Enemy Idle µo²{ª±®a¡I¹ê»Ú°»´ú¥b®|: " + detectionRadius);
+                    // ï¿½ï¿½ï¿½ï¿½ï¿½ìª±ï¿½aï¿½Aï¿½iï¿½ï¿½ï¿½ï¿½ï¿½
+                    Debug.Log("Enemy Idle ï¿½oï¿½{ï¿½ï¿½ï¿½aï¿½Iï¿½ï¿½Ú°ï¿½ï¿½ï¿½ï¿½bï¿½|: " + detectionRadius);
                     AttackPlayer(hitCollider.gameObject);
                     foundPlayer = true;
                     break;
@@ -53,7 +53,7 @@ public class EnemyIdle : MonoBehaviour
             }
         }
 
-        // §ó·s¶ê°éÅã¥Ü
+        // ï¿½ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         UpdateCircleDisplay(foundPlayer);
     }
 
@@ -61,21 +61,13 @@ public class EnemyIdle : MonoBehaviour
     {
         if (player == null) return;
 
-        // ÀË¬d§ðÀ»§N«o®É¶¡
+        // ï¿½Ë¬dï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½oï¿½É¶ï¿½
         if (Time.time - lastAttackTime < attackCooldown)
         {
             return;
         }
 
         lastAttackTime = Time.time;
-
-        // ¹ïª±®a³y¦¨¶Ë®`
-        PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
-        if (playerHealth != null)
-        {
-            Debug.Log("Enemy Idle §ðÀ»ª±®a¡I");
-            playerHealth.TakeDamage();
-        }
     }
 
     void SetupCircleRenderer()
@@ -88,15 +80,16 @@ public class EnemyIdle : MonoBehaviour
 
         if (lineRenderer == null)
         {
-            Debug.LogError("µLªk³Ð«Ø LineRenderer¡I");
+            Debug.LogError("ï¿½Lï¿½kï¿½Ð«ï¿½ LineRendererï¿½I");
             return;
         }
 
-        // ³]©w LineRenderer ÄÝ©Ê
+        // ï¿½]ï¿½w LineRenderer ï¿½Ý©ï¿½
         lineRenderer.positionCount = circleSegments + 1;
-        lineRenderer.useWorldSpace = true; // §ï¥Î¥@¬ÉªÅ¶¡¡A§ó·Ç½T
+        lineRenderer.useWorldSpace = true; // ï¿½ï¿½Î¥@ï¿½ÉªÅ¶ï¿½ï¿½Aï¿½ï¿½Ç½T
         lineRenderer.startWidth = lineWidth;
         lineRenderer.endWidth = lineWidth;
+        lineRenderer.enabled = false;
 
         Material lineMaterial = new Material(Shader.Find("Sprites/Default"));
         if (lineMaterial != null)
@@ -109,7 +102,7 @@ public class EnemyIdle : MonoBehaviour
         lineRenderer.sortingLayerName = "Default";
         lineRenderer.sortingOrder = 10;
 
-        // Ã¸»s¶ê§Î
+        // Ã¸ï¿½sï¿½ï¿½ï¿½
         DrawCircle();
 
         if (!showDetectionCircle)
@@ -127,7 +120,7 @@ public class EnemyIdle : MonoBehaviour
 
         for (int i = 0; i <= circleSegments; i++)
         {
-            // ¨Ï¥Î¥@¬ÉªÅ¶¡®y¼Ð
+            // ï¿½Ï¥Î¥@ï¿½ÉªÅ¶ï¿½ï¿½yï¿½ï¿½
             float x = transform.position.x + detectionRadius * Mathf.Cos(theta);
             float y = transform.position.y + detectionRadius * Mathf.Sin(theta);
             Vector3 pos = new Vector3(x, y, transform.position.z);
@@ -143,23 +136,22 @@ public class EnemyIdle : MonoBehaviour
             return;
         }
 
-        // ¨C´V§ó·s¶ê°é¦ì¸m¡]¦]¬°¼Ä¤H¥i¯à·|²¾°Ê¡^
+        // ï¿½Cï¿½Vï¿½ï¿½sï¿½ï¿½ï¿½ï¿½mï¿½]ï¿½]ï¿½ï¿½ï¿½Ä¤Hï¿½iï¿½ï¿½|ï¿½ï¿½ï¿½Ê¡^
         DrawCircle();
 
-        // §ó·sÃC¦â
+        // ï¿½ï¿½sï¿½Cï¿½ï¿½
         if (lineRenderer != null)
         {
-            lineRenderer.enabled = true;
             Color currentColor = foundPlayer ? attackCircleColor : normalCircleColor;
             lineRenderer.startColor = currentColor;
             lineRenderer.endColor = currentColor;
         }
     }
 
-    // ¦b Scene µø¹Ï¤¤Ã¸»s°»´ú½d³ò
+    // ï¿½b Scene ï¿½ï¿½ï¿½Ï¤ï¿½Ã¸ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½dï¿½ï¿½
     void OnDrawGizmosSelected()
     {
-        // Ã¸»s¶ê§Î°»´ú½d³ò - ³o­ÓÀ³¸Ó©M¹ê»Ú°»´ú½d³ò§¹¥þ¤@­P
+        // Ã¸ï¿½sï¿½ï¿½Î°ï¿½ï¿½ï¿½ï¿½dï¿½ï¿½ - ï¿½oï¿½ï¿½ï¿½ï¿½ï¿½Ó©Mï¿½ï¿½Ú°ï¿½ï¿½ï¿½ï¿½dï¿½ò§¹¥ï¿½ï¿½@ï¿½P
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(transform.position, detectionRadius);
     }

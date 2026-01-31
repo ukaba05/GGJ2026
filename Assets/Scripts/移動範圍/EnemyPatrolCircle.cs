@@ -4,25 +4,25 @@ using UnityEngine;
 
 public class EnemyPatrolCircle : MonoBehaviour
 {
-    [Header("²¾°Ê³]©w")]
+    [Header("ï¿½ï¿½ï¿½Ê³]ï¿½w")]
     [SerializeField] private float moveSpeed = 2f;
-    [SerializeField] private bool isHorizontal = true; // true = x¶b²¾°Ê, false = y¶b²¾°Ê
-    private int moveDirection = 1; // 1 ©Î -1
+    [SerializeField] private bool isHorizontal = true; // true = xï¿½bï¿½ï¿½ï¿½ï¿½, false = yï¿½bï¿½ï¿½ï¿½ï¿½
+    private int moveDirection = 1; // 1 ï¿½ï¿½ -1
 
-    [Header("°»´ú³]©w")]
+    [Header("ï¿½ï¿½ï¿½ï¿½ï¿½]ï¿½w")]
     [SerializeField] private float wallCheckDistance = 0.5f;
-    private LayerMask obstacleLayer; // »ÙÃªª«¹Ï¼h
+    private LayerMask obstacleLayer; // ï¿½ï¿½Ãªï¿½ï¿½ï¿½Ï¼h
 
-    [Header("¶ê§Î§ðÀ»³]©w")]
-    [SerializeField] private float detectionRadius = 3f; // ¶ê§Î°»´ú½d³ò¥b®|
-    [SerializeField] private float attackCooldown = 1f; // §ðÀ»§N«o®É¶¡
+    [Header("ï¿½ï¿½Î§ï¿½ï¿½ï¿½ï¿½]ï¿½w")]
+    [SerializeField] private float detectionRadius = 3f; // ï¿½ï¿½Î°ï¿½ï¿½ï¿½ï¿½dï¿½ï¿½bï¿½|
+    [SerializeField] private float attackCooldown = 1f; // ï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½oï¿½É¶ï¿½
     private float lastAttackTime = 0f;
 
-    [Header("µø½uÅã¥Ü³]©w")]
-    [SerializeField] private bool showDetectionCircle = true; // ¬O§_Åã¥Ü°»´ú°é
-    [SerializeField] private Color circleColor = new Color(0, 1, 1, 0.8f); // ¶ê°éÃC¦â¡]«C¦â¡^
-    [SerializeField] private int circleSegments = 50; // ¶ê°éºë²Ó«×
-    [SerializeField] private float lineWidth = 0.15f; // ¶ê°é½u±ø¼e«×
+    [Header("ï¿½ï¿½ï¿½uï¿½ï¿½Ü³]ï¿½w")]
+    [SerializeField] private bool showDetectionCircle = true; // ï¿½Oï¿½_ï¿½ï¿½Ü°ï¿½ï¿½ï¿½ï¿½ï¿½
+    [SerializeField] private Color circleColor = new Color(0, 1, 1, 0.8f); // ï¿½ï¿½ï¿½ï¿½Cï¿½ï¿½]ï¿½Cï¿½ï¿½^
+    [SerializeField] private int circleSegments = 50; // ï¿½ï¿½ï¿½ï¿½Ó«ï¿½
+    [SerializeField] private float lineWidth = 0.15f; // ï¿½ï¿½ï¿½uï¿½ï¿½ï¿½eï¿½ï¿½
 
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
@@ -33,31 +33,31 @@ public class EnemyPatrolCircle : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
-        // ³]©w»ÙÃªª« Layer
+        // ï¿½]ï¿½wï¿½ï¿½Ãªï¿½ï¿½ Layer
         obstacleLayer = LayerMask.GetMask("obstacle");
 
-        // ³]©w Rigidbody2D ¤£¨ü­«¤O¼vÅT
+        // ï¿½]ï¿½w Rigidbody2D ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½vï¿½T
         if (rb != null)
         {
             rb.gravityScale = 0;
         }
 
-        // ³]©w¶ê°éÅã¥Ü
+        // ï¿½]ï¿½wï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         SetupCircleRenderer();
     }
 
     void Update()
     {
-        // ÀË´ú«e¤è¬O§_¦³Àð¾À
+        // ï¿½Ë´ï¿½ï¿½eï¿½ï¿½Oï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½
         CheckWall();
 
-        // ÀË´ú¶ê§Î½d³ò¤ºªºª±®a¨Ã§ðÀ»
+        // ï¿½Ë´ï¿½ï¿½ï¿½Î½dï¿½ò¤ºªï¿½ï¿½ï¿½ï¿½aï¿½Ã§ï¿½ï¿½ï¿½
         DetectAndAttackPlayer();
     }
 
     void FixedUpdate()
     {
-        // ²¾°Ê
+        // ï¿½ï¿½ï¿½ï¿½
         Move();
     }
 
@@ -80,7 +80,7 @@ public class EnemyPatrolCircle : MonoBehaviour
 
     void CheckWall()
     {
-        // ®Ú¾Ú²¾°Ê¶b¦V¨M©wÀË´ú¤è¦V
+        // ï¿½Ú¾Ú²ï¿½ï¿½Ê¶bï¿½Vï¿½Mï¿½wï¿½Ë´ï¿½ï¿½ï¿½V
         Vector2 direction;
         if (isHorizontal)
         {
@@ -91,31 +91,31 @@ public class EnemyPatrolCircle : MonoBehaviour
             direction = moveDirection > 0 ? Vector2.up : Vector2.down;
         }
 
-        // ®g½uÀË´ú«e¤è¬O§_¦³»ÙÃªª«¡]Àð¾À©ÎÃä¬É¡^
+        // ï¿½gï¿½uï¿½Ë´ï¿½ï¿½eï¿½ï¿½Oï¿½_ï¿½ï¿½ï¿½ï¿½Ãªï¿½ï¿½ï¿½]ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É¡^
         RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, wallCheckDistance, obstacleLayer);
 
         if (hit.collider != null)
         {
-            // ¸I¨ì»ÙÃªª«¡AÂà¦V
+            // ï¿½Iï¿½ï¿½ï¿½Ãªï¿½ï¿½ï¿½Aï¿½ï¿½V
             Flip();
         }
 
-        // Ã¸»s°»´ú®g½u¡]¶È¦b Scene µø¹Ï¤¤¥i¨£¡^
+        // Ã¸ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½gï¿½uï¿½]ï¿½È¦b Scene ï¿½ï¿½ï¿½Ï¤ï¿½ï¿½iï¿½ï¿½ï¿½^
         Debug.DrawRay(transform.position, direction * wallCheckDistance, Color.red);
     }
 
     void Flip()
     {
-        // ¤ÏÂà²¾°Ê¤è¦V
+        // ï¿½ï¿½ï¿½à²¾ï¿½Ê¤ï¿½V
         moveDirection *= -1;
 
-        // ¦pªG¬O¤ô¥­²¾°Ê¡AÂ½Âà¹Ï¼h¡]Sprite¡^
+        // ï¿½pï¿½Gï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¡AÂ½ï¿½ï¿½Ï¼hï¿½]Spriteï¿½^
         if (isHorizontal && spriteRenderer != null)
         {
             spriteRenderer.flipX = !spriteRenderer.flipX;
         }
 
-        // ¦pªG¬O««ª½²¾°Ê¡A¥i¥H¿ï¾ÜÂ½Âà Y ¶b¡]¥i¿ï¡^
+        // ï¿½pï¿½Gï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¡Aï¿½iï¿½Hï¿½ï¿½ï¿½Â½ï¿½ï¿½ Y ï¿½bï¿½]ï¿½iï¿½ï¿½^
         if (!isHorizontal && spriteRenderer != null)
         {
             spriteRenderer.flipY = !spriteRenderer.flipY;
@@ -124,7 +124,7 @@ public class EnemyPatrolCircle : MonoBehaviour
 
     void DetectAndAttackPlayer()
     {
-        // ¨Ï¥Î OverlapCircle ÀË´ú¶ê§Î½d³ò¤ºªº©Ò¦³¸I¼²Åé
+        // ï¿½Ï¥ï¿½ OverlapCircle ï¿½Ë´ï¿½ï¿½ï¿½Î½dï¿½ò¤ºªï¿½ï¿½Ò¦ï¿½ï¿½Iï¿½ï¿½ï¿½ï¿½
         Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, detectionRadius);
 
         if (hitColliders != null && hitColliders.Length > 0)
@@ -133,15 +133,15 @@ public class EnemyPatrolCircle : MonoBehaviour
             {
                 if (hitCollider != null && hitCollider.CompareTag("Player"))
                 {
-                    // °»´ú¨ìª±®a¡A¶i¦æ§ðÀ»
-                    Debug.Log("Enemy Patrol Circle µo²{ª±®a¡I");
+                    // ï¿½ï¿½ï¿½ï¿½ï¿½ìª±ï¿½aï¿½Aï¿½iï¿½ï¿½ï¿½ï¿½ï¿½
+                    Debug.Log("Enemy Patrol Circle ï¿½oï¿½{ï¿½ï¿½ï¿½aï¿½I");
                     AttackPlayer(hitCollider.gameObject);
                     break;
                 }
             }
         }
 
-        // §ó·s¶ê°éÅã¥Ü
+        // ï¿½ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         UpdateCircleDisplay();
     }
 
@@ -149,21 +149,13 @@ public class EnemyPatrolCircle : MonoBehaviour
     {
         if (player == null) return;
 
-        // ÀË¬d§ðÀ»§N«o®É¶¡
+        // ï¿½Ë¬dï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½oï¿½É¶ï¿½
         if (Time.time - lastAttackTime < attackCooldown)
         {
             return;
         }
 
         lastAttackTime = Time.time;
-
-        // ¹ïª±®a³y¦¨¶Ë®`
-        PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
-        if (playerHealth != null)
-        {
-            Debug.Log("Enemy Patrol Circle §ðÀ»ª±®a¡I");
-            playerHealth.TakeDamage();
-        }
     }
 
     void SetupCircleRenderer()
@@ -176,15 +168,16 @@ public class EnemyPatrolCircle : MonoBehaviour
 
         if (lineRenderer == null)
         {
-            Debug.LogError("µLªk³Ð«Ø LineRenderer¡I");
+            Debug.LogError("ï¿½Lï¿½kï¿½Ð«ï¿½ LineRendererï¿½I");
             return;
         }
 
-        // ³]©w LineRenderer ÄÝ©Ê
+        // ï¿½]ï¿½w LineRenderer ï¿½Ý©ï¿½
         lineRenderer.positionCount = circleSegments + 1;
         lineRenderer.useWorldSpace = true;
         lineRenderer.startWidth = lineWidth;
         lineRenderer.endWidth = lineWidth;
+        lineRenderer.enabled = false;
 
         Material lineMaterial = new Material(Shader.Find("Sprites/Default"));
         if (lineMaterial != null)
@@ -197,7 +190,7 @@ public class EnemyPatrolCircle : MonoBehaviour
         lineRenderer.sortingLayerName = "Default";
         lineRenderer.sortingOrder = 10;
 
-        // Ã¸»s¶ê§Î
+        // Ã¸ï¿½sï¿½ï¿½ï¿½
         DrawCircle();
 
         if (!showDetectionCircle)
@@ -215,7 +208,7 @@ public class EnemyPatrolCircle : MonoBehaviour
 
         for (int i = 0; i <= circleSegments; i++)
         {
-            // ¨Ï¥Î¥@¬ÉªÅ¶¡®y¼Ð
+            // ï¿½Ï¥Î¥@ï¿½ÉªÅ¶ï¿½ï¿½yï¿½ï¿½
             float x = transform.position.x + detectionRadius * Mathf.Cos(theta);
             float y = transform.position.y + detectionRadius * Mathf.Sin(theta);
             Vector3 pos = new Vector3(x, y, transform.position.z);
@@ -231,19 +224,14 @@ public class EnemyPatrolCircle : MonoBehaviour
             return;
         }
 
-        // ¨C´V§ó·s¶ê°é¦ì¸m¡]¦]¬°¼Ä¤H¦b²¾°Ê¡^
+        // ï¿½Cï¿½Vï¿½ï¿½sï¿½ï¿½ï¿½ï¿½mï¿½]ï¿½]ï¿½ï¿½ï¿½Ä¤Hï¿½bï¿½ï¿½ï¿½Ê¡^
         DrawCircle();
-
-        if (lineRenderer != null)
-        {
-            lineRenderer.enabled = true;
-        }
     }
 
-    // ¦b Scene µø¹Ï¤¤Ã¸»s°»´ú½d³ò
+    // ï¿½b Scene ï¿½ï¿½ï¿½Ï¤ï¿½Ã¸ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½dï¿½ï¿½
     void OnDrawGizmosSelected()
     {
-        // ®Ú¾Ú²¾°Ê¶b¦V¨M©wÀË´ú¤è¦V¡]Åã¥ÜÀð¾ÀÀË´ú¡^
+        // ï¿½Ú¾Ú²ï¿½ï¿½Ê¶bï¿½Vï¿½Mï¿½wï¿½Ë´ï¿½ï¿½ï¿½Vï¿½]ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë´ï¿½ï¿½^
         Vector2 direction;
         if (isHorizontal)
         {
@@ -254,11 +242,11 @@ public class EnemyPatrolCircle : MonoBehaviour
             direction = moveDirection > 0 ? Vector2.up : Vector2.down;
         }
 
-        // Ã¸»sÀð¾ÀÀË´ú½d³ò
+        // Ã¸ï¿½sï¿½ï¿½ï¿½ï¿½Ë´ï¿½ï¿½dï¿½ï¿½
         Gizmos.color = Color.red;
         Gizmos.DrawRay(transform.position, direction * wallCheckDistance);
 
-        // Ã¸»s¶ê§Î°»´ú½d³ò
+        // Ã¸ï¿½sï¿½ï¿½Î°ï¿½ï¿½ï¿½ï¿½dï¿½ï¿½
         Gizmos.color = Color.cyan;
         Gizmos.DrawWireSphere(transform.position, detectionRadius);
     }

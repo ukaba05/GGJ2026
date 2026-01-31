@@ -1,11 +1,12 @@
-using System;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-using Object = UnityEngine.Object;
 
 public class MaskUsesController : MonoBehaviour
 {
+    [SerializeField]
+    Camera _camera;
+
     [SerializeField]
     HorizontalLayoutGroup _layoutGroup;
 
@@ -20,6 +21,8 @@ public class MaskUsesController : MonoBehaviour
 
     int _selectedIndex;
 
+    bool _enableMousedSelection;
+
     void Awake() {
         var instance = Instantiate(_slot, _layoutGroup.transform);
         _arrow.SetParent(instance);
@@ -31,9 +34,12 @@ public class MaskUsesController : MonoBehaviour
 
     void Update() {
         DetectMouseScroll();
+
         if (Input.GetKeyDown(KeyCode.X)) {
             TryUseItem(_selectedIndex);
         }
+
+        if (_enableMousedSelection) { }
     }
 
     void DetectMouseScroll() {
@@ -56,5 +62,16 @@ public class MaskUsesController : MonoBehaviour
 
         if (_itemCount[index] <= 0) return;
         _itemCount[index] -= 1;
+
+        if (index == 0) {
+            Investigation();
+        }
+    }
+
+    void Investigation() {
+        var worldPoint = _camera.ScreenToWorldPoint(Input.mousePosition);
+        worldPoint = new Vector3(worldPoint.x, worldPoint.y, 0);
+        var overlapPoint = Physics2D.OverlapPoint(worldPoint, LayerMask.GetMask("Enemy"));
+        overlapPoint.GetComponent<LineRenderer>().enabled = true;
     }
 }

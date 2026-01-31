@@ -4,24 +4,24 @@ using UnityEngine;
 
 public class EnemyWalk : MonoBehaviour
 {
-    [Header("²¾°Ê³]©w")]
+    [Header("ï¿½ï¿½ï¿½Ê³]ï¿½w")]
     [SerializeField] private float moveSpeed = 2f;
-    [SerializeField] private bool isHorizontal = true; // true = x¶b²¾°Ê, false = y¶b²¾°Ê
-    private int moveDirection = 1; // 1 ©Î -1
+    [SerializeField] private bool isHorizontal = true; // true = xï¿½bï¿½ï¿½ï¿½ï¿½, false = yï¿½bï¿½ï¿½ï¿½ï¿½
+    private int moveDirection = 1; // 1 ï¿½ï¿½ -1
 
-    [Header("°»´ú³]©w")]
+    [Header("ï¿½ï¿½ï¿½ï¿½ï¿½]ï¿½w")]
     [SerializeField] private float wallCheckDistance = 0.5f;
-    private LayerMask obstacleLayer; // »ÙÃªª«¹Ï¼h
+    private LayerMask obstacleLayer; // ï¿½ï¿½Ãªï¿½ï¿½ï¿½Ï¼h
 
-    [Header("§ðÀ»µøÀ@³]©w")]
+    [Header("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½@ï¿½]ï¿½w")]
     [SerializeField] private float visionDistance = 5f;
-    [SerializeField] private float attackCooldown = 1f; // §ðÀ»§N«o®É¶¡
-    private float lastAttackTime = 0f; // ¤W¦¸§ðÀ»®É¶¡
+    [SerializeField] private float attackCooldown = 1f; // ï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½oï¿½É¶ï¿½
+    private float lastAttackTime = 0f; // ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É¶ï¿½
 
-    [Header("µø½uÅã¥Ü³]©w")]
-    [SerializeField] private bool showVisionLine = true; // ¬O§_Åã¥Üµø½u
-    [SerializeField] private Color normalVisionColor = Color.yellow; // ¥¿±`µø½uÃC¦â
-    [SerializeField] private float lineWidth = 0.05f; // ½u±ø¼e«×
+    [Header("ï¿½ï¿½ï¿½uï¿½ï¿½Ü³]ï¿½w")]
+    [SerializeField] private bool showVisionLine = true; // ï¿½Oï¿½_ï¿½ï¿½Üµï¿½ï¿½u
+    [SerializeField] private Color normalVisionColor = Color.yellow; // ï¿½ï¿½ï¿½`ï¿½ï¿½ï¿½uï¿½Cï¿½ï¿½
+    [SerializeField] private float lineWidth = 0.05f; // ï¿½uï¿½ï¿½ï¿½eï¿½ï¿½
 
     private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
@@ -32,30 +32,30 @@ public class EnemyWalk : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
-        // ³]©w»ÙÃªª« Layer
+        // ï¿½]ï¿½wï¿½ï¿½Ãªï¿½ï¿½ Layer
         obstacleLayer = LayerMask.GetMask("obstacle");
 
-        // ³]©w Rigidbody2D ¤£¨ü­«¤O¼vÅT
+        // ï¿½]ï¿½w Rigidbody2D ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Oï¿½vï¿½T
         if (rb != null)
         {
             rb.gravityScale = 0;
         }
-        // ³]©w LineRenderer
+        // ï¿½]ï¿½w LineRenderer
         SetupLineRenderer();
     }
 
     void Update()
     {
-        // ÀË´ú«e¤è¬O§_¦³Àð¾À
+        // ï¿½Ë´ï¿½ï¿½eï¿½ï¿½Oï¿½_ï¿½ï¿½ï¿½ï¿½ï¿½
         CheckWall();
 
-        // ÀË´úµøÀ@½d³ò¤ºªºª±®a¨Ã§ðÀ»
+        // ï¿½Ë´ï¿½ï¿½ï¿½ï¿½@ï¿½dï¿½ò¤ºªï¿½ï¿½ï¿½ï¿½aï¿½Ã§ï¿½ï¿½ï¿½
         DetectAndAttackPlayer();
     }
 
     void FixedUpdate()
     {
-        // ²¾°Ê
+        // ï¿½ï¿½ï¿½ï¿½
         Move();
     }
 
@@ -65,19 +65,19 @@ public class EnemyWalk : MonoBehaviour
 
         if (isHorizontal)
         {
-            // x ¶b²¾°Ê
+            // x ï¿½bï¿½ï¿½ï¿½ï¿½
             rb.velocity = new Vector2(moveDirection * moveSpeed, 0);
         }
         else
         {
-            // y ¶b²¾°Ê
+            // y ï¿½bï¿½ï¿½ï¿½ï¿½
             rb.velocity = new Vector2(0, moveDirection * moveSpeed);
         }
     }
 
     void CheckWall()
     {
-        // ®Ú¾Ú²¾°Ê¶b¦V¨M©wÀË´ú¤è¦V
+        // ï¿½Ú¾Ú²ï¿½ï¿½Ê¶bï¿½Vï¿½Mï¿½wï¿½Ë´ï¿½ï¿½ï¿½V
         Vector2 direction;
         if (isHorizontal)
         {
@@ -88,31 +88,32 @@ public class EnemyWalk : MonoBehaviour
             direction = moveDirection > 0 ? Vector2.up : Vector2.down;
         }
 
-        // ®g½uÀË´ú«e¤è¬O§_¦³»ÙÃªª«¡]Àð¾À©ÎÃä¬É¡^
+        // ï¿½gï¿½uï¿½Ë´ï¿½ï¿½eï¿½ï¿½Oï¿½_ï¿½ï¿½ï¿½ï¿½Ãªï¿½ï¿½ï¿½]ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É¡^
         RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, wallCheckDistance, obstacleLayer);
-
+        if(hit) Debug.Log(1);
+        
         if (hit.collider != null)
         {
-            // ¸I¨ì»ÙÃªª«¡AÂà¦V
+            // ï¿½Iï¿½ï¿½ï¿½Ãªï¿½ï¿½ï¿½Aï¿½ï¿½V
             Flip();
         }
 
-        // Ã¸»s°»´ú®g½u¡]¶È¦b Scene µø¹Ï¤¤¥i¨£¡^
+        // Ã¸ï¿½sï¿½ï¿½ï¿½ï¿½ï¿½gï¿½uï¿½]ï¿½È¦b Scene ï¿½ï¿½ï¿½Ï¤ï¿½ï¿½iï¿½ï¿½ï¿½^
         Debug.DrawRay(transform.position, direction * wallCheckDistance, Color.red);
     }
 
     void Flip()
     {
-        // ¤ÏÂà²¾°Ê¤è¦V
+        // ï¿½ï¿½ï¿½à²¾ï¿½Ê¤ï¿½V
         moveDirection *= -1;
 
-        // ¦pªG¬O¤ô¥­²¾°Ê¡AÂ½Âà¹Ï¼h¡]Sprite¡^
+        // ï¿½pï¿½Gï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¡AÂ½ï¿½ï¿½Ï¼hï¿½]Spriteï¿½^
         if (isHorizontal && spriteRenderer != null)
         {
             spriteRenderer.flipX = !spriteRenderer.flipX;
         }
 
-        // ¦pªG¬O««ª½²¾°Ê¡A¥i¥H¿ï¾ÜÂ½Âà Y ¶b¡]¥i¿ï¡^
+        // ï¿½pï¿½Gï¿½Oï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¡Aï¿½iï¿½Hï¿½ï¿½ï¿½Â½ï¿½ï¿½ Y ï¿½bï¿½]ï¿½iï¿½ï¿½^
         if (!isHorizontal && spriteRenderer != null)
         {
             spriteRenderer.flipY = !spriteRenderer.flipY;
@@ -121,7 +122,7 @@ public class EnemyWalk : MonoBehaviour
 
     void DetectAndAttackPlayer()
     {
-        // ®Ú¾Ú²¾°Ê¶b¦V¨M©wµø½u¤è¦V
+        // ï¿½Ú¾Ú²ï¿½ï¿½Ê¶bï¿½Vï¿½Mï¿½wï¿½ï¿½ï¿½uï¿½ï¿½V
         Vector2 direction;
         if (isHorizontal)
         {
@@ -132,7 +133,7 @@ public class EnemyWalk : MonoBehaviour
             direction = moveDirection > 0 ? Vector2.up : Vector2.down;
         }
 
-        // ®g½uÀË´úµøÀ@½d³ò¡Aª½¨ì¸I¨ì»ÙÃªª«©Îª±®a
+        // ï¿½gï¿½uï¿½Ë´ï¿½ï¿½ï¿½ï¿½@ï¿½dï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½Iï¿½ï¿½ï¿½Ãªï¿½ï¿½ï¿½Îªï¿½ï¿½a
         RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, visionDistance, obstacleLayer | (1 << LayerMask.NameToLayer("Player")));
 
         bool foundPlayer = false;
@@ -141,42 +142,34 @@ public class EnemyWalk : MonoBehaviour
         {
             if (hit.collider.CompareTag("Player"))
             {
-                // µø½u¤º¦³ª±®a¡A¶i¦æ§ðÀ»
-                Debug.Log("Enemy Walk µo²{ª±®a¡I§ðÀ»¶ZÂ÷: " + hit.distance);
+                // ï¿½ï¿½ï¿½uï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½aï¿½Aï¿½iï¿½ï¿½ï¿½ï¿½ï¿½
+                Debug.Log("Enemy Walk ï¿½oï¿½{ï¿½ï¿½ï¿½aï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½Zï¿½ï¿½: " + hit.distance);
                 AttackPlayer(hit.collider.gameObject);
                 foundPlayer = true;
             }
         }
 
-        // §ó·sµø½uÅã¥Ü
+        // ï¿½ï¿½sï¿½ï¿½ï¿½uï¿½ï¿½ï¿½
         UpdateVisionLine(direction, hit, foundPlayer);
 
-        // Ã¸»sµøÀ@½d³ò¡]¶È¦b Scene µø¹Ï¤¤¥i¨£¡^
+        // Ã¸ï¿½sï¿½ï¿½ï¿½@ï¿½dï¿½ï¿½]ï¿½È¦b Scene ï¿½ï¿½ï¿½Ï¤ï¿½ï¿½iï¿½ï¿½ï¿½^
         float drawDistance = hit.collider != null ? hit.distance : visionDistance;
         Debug.DrawRay(transform.position, direction * drawDistance, foundPlayer ? Color.red : Color.yellow);
     }
 
     void AttackPlayer(GameObject player)
     {
-        // ÀË¬d§ðÀ»§N«o®É¶¡
+        // ï¿½Ë¬dï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½oï¿½É¶ï¿½
         if (Time.time - lastAttackTime < attackCooldown)
         {
-            return; // ÁÙ¦b§N«o¤¤¡A¤£¯à§ðÀ»
+            return; // ï¿½Ù¦bï¿½Nï¿½oï¿½ï¿½ï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
         }
 
-        // §ó·s¤W¦¸§ðÀ»®É¶¡
+        // ï¿½ï¿½sï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½É¶ï¿½
         lastAttackTime = Time.time;
-
-        // ¹ïª±®a³y¦¨¶Ë®`
-        PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
-        if (playerHealth != null)
-        {
-            Debug.Log("Enemy Walk §ðÀ»ª±®a¡I");
-            playerHealth.TakeDamage();
-        }
     }
 
-    // ¦b Scene µø¹Ï¤¤Ã¸»sµøÀ@½d³ò
+    // ï¿½b Scene ï¿½ï¿½ï¿½Ï¤ï¿½Ã¸ï¿½sï¿½ï¿½ï¿½@ï¿½dï¿½ï¿½
     void OnDrawGizmosSelected()
     {
         Vector2 direction;
@@ -189,25 +182,25 @@ public class EnemyWalk : MonoBehaviour
             direction = moveDirection > 0 ? Vector2.up : Vector2.down;
         }
 
-        // Ã¸»sµøÀ@
+        // Ã¸ï¿½sï¿½ï¿½ï¿½@
         Gizmos.color = Color.yellow;
         Gizmos.DrawRay(transform.position, direction * visionDistance);
 
-        // Ã¸»sÀð¾ÀÀË´ú½d³ò
+        // Ã¸ï¿½sï¿½ï¿½ï¿½ï¿½Ë´ï¿½ï¿½dï¿½ï¿½
         Gizmos.color = Color.red;
         Gizmos.DrawRay(transform.position, direction * wallCheckDistance);
     }
 
     void SetupLineRenderer()
     {
-        // ÀË¬d¬O§_¤w¦³ LineRenderer¡A¨S¦³«h²K¥[
+        // ï¿½Ë¬dï¿½Oï¿½_ï¿½wï¿½ï¿½ LineRendererï¿½Aï¿½Sï¿½ï¿½ï¿½hï¿½Kï¿½[
         lineRenderer = GetComponent<LineRenderer>();
         if (lineRenderer == null)
         {
             lineRenderer = gameObject.AddComponent<LineRenderer>();
         }
 
-        // ³]©w LineRenderer ÄÝ©Ê
+        // ï¿½]ï¿½w LineRenderer ï¿½Ý©ï¿½
         lineRenderer.startWidth = lineWidth;
         lineRenderer.endWidth = lineWidth;
         lineRenderer.positionCount = 2;
@@ -215,9 +208,10 @@ public class EnemyWalk : MonoBehaviour
         lineRenderer.startColor = normalVisionColor;
         lineRenderer.endColor = normalVisionColor;
         lineRenderer.sortingLayerName = "Default";
-        lineRenderer.sortingOrder = 10; // ½T«O¦b¨ä¥Lª«¥ó¤W¤èÅã¥Ü
-
-        // ¦pªG¤£Åã¥Üµø½u¡A«h¸T¥Î
+        lineRenderer.sortingOrder = 10; // ï¿½Tï¿½Oï¿½bï¿½ï¿½Lï¿½ï¿½ï¿½ï¿½Wï¿½ï¿½ï¿½ï¿½ï¿½
+        lineRenderer.enabled = false;
+        
+        // ï¿½pï¿½Gï¿½ï¿½ï¿½ï¿½Üµï¿½ï¿½uï¿½Aï¿½hï¿½Tï¿½ï¿½
         if (!showVisionLine)
         {
             lineRenderer.enabled = false;
@@ -231,13 +225,10 @@ public class EnemyWalk : MonoBehaviour
             return;
         }
 
-        // ½T«O LineRenderer ±Ò¥Î
-        lineRenderer.enabled = true;
-
-        // ³]©w°_ÂI
+        // ï¿½]ï¿½wï¿½_ï¿½I
         lineRenderer.SetPosition(0, transform.position);
 
-        // ³]©w²×ÂI¡]¦pªG¸I¨ìªF¦è¡A´Nµe¨ì¸I¼²ÂI¡F§_«hµe¨ì³Ì»·¶ZÂ÷¡^
+        // ï¿½]ï¿½wï¿½ï¿½ï¿½Iï¿½]ï¿½pï¿½Gï¿½Iï¿½ï¿½Fï¿½ï¿½Aï¿½Nï¿½eï¿½ï¿½Iï¿½ï¿½ï¿½Iï¿½Fï¿½_ï¿½hï¿½eï¿½ï¿½Ì»ï¿½ï¿½Zï¿½ï¿½ï¿½^
         Vector3 endPoint;
         if (hit.collider != null)
         {

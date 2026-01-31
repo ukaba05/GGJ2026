@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class EnemyStaticVision : MonoBehaviour
 {
-    [Header("µøÀ@§ðÀ»³]©w")]
-    [SerializeField] private float visionDistance = 5f; // µø½u¶ZÂ÷
-    [SerializeField] private VisionDirection visionDir = VisionDirection.Right; // µø½u¤è¦V
-    [SerializeField] private float attackCooldown = 1f; // §ðÀ»§N«o®É¶¡
+    [Header("ï¿½ï¿½ï¿½@ï¿½ï¿½ï¿½ï¿½ï¿½]ï¿½w")]
+    [SerializeField] private float visionDistance = 5f; // ï¿½ï¿½ï¿½uï¿½Zï¿½ï¿½
+    [SerializeField] private VisionDirection visionDir = VisionDirection.Right; // ï¿½ï¿½ï¿½uï¿½ï¿½V
+    [SerializeField] private float attackCooldown = 1f; // ï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½oï¿½É¶ï¿½
     private float lastAttackTime = 0f;
 
-    [Header("µø½uÅã¥Ü³]©w")]
+    [Header("ï¿½ï¿½ï¿½uï¿½ï¿½Ü³]ï¿½w")]
     [SerializeField] private bool showVisionLine = true;
     [SerializeField] private Color visionColor = Color.yellow;
     [SerializeField] private float lineWidth = 0.1f;
@@ -19,13 +19,13 @@ public class EnemyStaticVision : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private LineRenderer lineRenderer;
 
-    // µø½u¤è¦V¿ï¶µ
+    // ï¿½ï¿½ï¿½uï¿½ï¿½Vï¿½ï¶µ
     public enum VisionDirection
     {
-        Right,  // ¦V¥k (1, 0)
-        Left,   // ¦V¥ª (-1, 0)
-        Up,     // ¦V¤W (0, 1)
-        Down    // ¦V¤U (0, -1)
+        Right,  // ï¿½Vï¿½k (1, 0)
+        Left,   // ï¿½Vï¿½ï¿½ (-1, 0)
+        Up,     // ï¿½Vï¿½W (0, 1)
+        Down    // ï¿½Vï¿½U (0, -1)
     }
 
     void Start()
@@ -33,22 +33,22 @@ public class EnemyStaticVision : MonoBehaviour
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
 
-        // ¼½©ñ idle °Êµe
+        // ï¿½ï¿½ï¿½ï¿½ idle ï¿½Êµe
         if (animator != null)
         {
             animator.Play("Enemy idle");
         }
 
-        // ®Ú¾Úµø½u¤è¦VÂ½Âà Sprite
+        // ï¿½Ú¾Úµï¿½ï¿½uï¿½ï¿½VÂ½ï¿½ï¿½ Sprite
         FlipSpriteBasedOnDirection();
 
-        // ³]©w LineRenderer
+        // ï¿½]ï¿½w LineRenderer
         SetupLineRenderer();
     }
 
     void Update()
     {
-        // ÀË´úµøÀ@½d³ò¤ºªºª±®a¨Ã§ðÀ»
+        // ï¿½Ë´ï¿½ï¿½ï¿½ï¿½@ï¿½dï¿½ò¤ºªï¿½ï¿½ï¿½ï¿½aï¿½Ã§ï¿½ï¿½ï¿½
         DetectAndAttackPlayer();
     }
 
@@ -56,7 +56,7 @@ public class EnemyStaticVision : MonoBehaviour
     {
         if (spriteRenderer == null) return;
 
-        // ®Ú¾Úµø½u¤è¦VÂ½Âà¹Ï¹³
+        // ï¿½Ú¾Úµï¿½ï¿½uï¿½ï¿½VÂ½ï¿½ï¿½Ï¹ï¿½
         switch (visionDir)
         {
             case VisionDirection.Left:
@@ -66,10 +66,10 @@ public class EnemyStaticVision : MonoBehaviour
                 spriteRenderer.flipX = false;
                 break;
             case VisionDirection.Up:
-                // ¥i¿ï¡G±ÛÂà¨¤¦â´Â¤W
+                // ï¿½iï¿½ï¿½Gï¿½ï¿½ï¿½à¨¤ï¿½ï¿½Â¤W
                 break;
             case VisionDirection.Down:
-                // ¥i¿ï¡G±ÛÂà¨¤¦â´Â¤U
+                // ï¿½iï¿½ï¿½Gï¿½ï¿½ï¿½à¨¤ï¿½ï¿½Â¤U
                 break;
         }
     }
@@ -95,7 +95,7 @@ public class EnemyStaticVision : MonoBehaviour
     {
         Vector2 direction = GetVisionDirectionVector();
 
-        // ³Ð«Ø¥]§t»ÙÃªª«©Mª±®aªº LayerMask
+        // ï¿½Ð«Ø¥]ï¿½tï¿½ï¿½Ãªï¿½ï¿½ï¿½Mï¿½ï¿½ï¿½aï¿½ï¿½ LayerMask
         LayerMask obstacleLayer = LayerMask.GetMask("obstacle");
         int playerLayerIndex = LayerMask.NameToLayer("Player");
         LayerMask combinedMask = obstacleLayer;
@@ -105,20 +105,20 @@ public class EnemyStaticVision : MonoBehaviour
             combinedMask |= (1 << playerLayerIndex);
         }
 
-        // ®g½uÀË´úµøÀ@½d³ò
+        // ï¿½gï¿½uï¿½Ë´ï¿½ï¿½ï¿½ï¿½@ï¿½dï¿½ï¿½
         RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, visionDistance, combinedMask);
 
         if (hit.collider != null && hit.collider.CompareTag("Player"))
         {
-            // µø½u¤º¦³ª±®a¡A¶i¦æ§ðÀ»
-            Debug.Log("Enemy Static Vision µo²{ª±®a¡I§ðÀ»¶ZÂ÷: " + hit.distance);
+            // ï¿½ï¿½ï¿½uï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½aï¿½Aï¿½iï¿½ï¿½ï¿½ï¿½ï¿½
+            Debug.Log("Enemy Static Vision ï¿½oï¿½{ï¿½ï¿½ï¿½aï¿½Iï¿½ï¿½ï¿½ï¿½ï¿½Zï¿½ï¿½: " + hit.distance);
             AttackPlayer(hit.collider.gameObject);
         }
 
-        // §ó·sµø½uÅã¥Ü
+        // ï¿½ï¿½sï¿½ï¿½ï¿½uï¿½ï¿½ï¿½
         UpdateVisionLine(direction, hit);
 
-        // Debug Ã¸»s
+        // Debug Ã¸ï¿½s
         float drawDistance = hit.collider != null ? hit.distance : visionDistance;
         Debug.DrawRay(transform.position, direction * drawDistance, Color.yellow);
     }
@@ -127,21 +127,13 @@ public class EnemyStaticVision : MonoBehaviour
     {
         if (player == null) return;
 
-        // ÀË¬d§ðÀ»§N«o®É¶¡
+        // ï¿½Ë¬dï¿½ï¿½ï¿½ï¿½ï¿½Nï¿½oï¿½É¶ï¿½
         if (Time.time - lastAttackTime < attackCooldown)
         {
             return;
         }
 
         lastAttackTime = Time.time;
-
-        // ¹ïª±®a³y¦¨¶Ë®`
-        PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
-        if (playerHealth != null)
-        {
-            Debug.Log("Enemy Static Vision §ðÀ»ª±®a¡I");
-            playerHealth.TakeDamage();
-        }
     }
 
     void SetupLineRenderer()
@@ -154,15 +146,16 @@ public class EnemyStaticVision : MonoBehaviour
 
         if (lineRenderer == null)
         {
-            Debug.LogError("µLªk³Ð«Ø LineRenderer¡I");
+            Debug.LogError("ï¿½Lï¿½kï¿½Ð«ï¿½ LineRendererï¿½I");
             return;
         }
 
-        // ³]©w LineRenderer ÄÝ©Ê
+        // ï¿½]ï¿½w LineRenderer ï¿½Ý©ï¿½
         lineRenderer.startWidth = lineWidth;
         lineRenderer.endWidth = lineWidth;
         lineRenderer.positionCount = 2;
         lineRenderer.useWorldSpace = true;
+        lineRenderer.enabled = false;
 
         Material lineMaterial = new Material(Shader.Find("Sprites/Default"));
         if (lineMaterial != null)
@@ -188,12 +181,10 @@ public class EnemyStaticVision : MonoBehaviour
             return;
         }
 
-        lineRenderer.enabled = true;
-
-        // ³]©w°_ÂI
+        // ï¿½]ï¿½wï¿½_ï¿½I
         lineRenderer.SetPosition(0, transform.position);
 
-        // ³]©w²×ÂI
+        // ï¿½]ï¿½wï¿½ï¿½ï¿½I
         Vector3 endPoint;
         if (hit.collider != null)
         {
@@ -206,16 +197,16 @@ public class EnemyStaticVision : MonoBehaviour
         lineRenderer.SetPosition(1, endPoint);
     }
 
-    // ¦b Scene µø¹Ï¤¤Ã¸»sµøÀ@½d³ò
+    // ï¿½b Scene ï¿½ï¿½ï¿½Ï¤ï¿½Ã¸ï¿½sï¿½ï¿½ï¿½@ï¿½dï¿½ï¿½
     void OnDrawGizmosSelected()
     {
         Vector2 direction = GetVisionDirectionVector();
 
-        // Ã¸»sµøÀ@
+        // Ã¸ï¿½sï¿½ï¿½ï¿½@
         Gizmos.color = Color.yellow;
         Gizmos.DrawRay(transform.position, direction * visionDistance);
 
-        // Ã¸»s¤è¦V¼Ð°O
+        // Ã¸ï¿½sï¿½ï¿½Vï¿½Ð°O
         Gizmos.color = Color.green;
         Gizmos.DrawWireSphere(transform.position + (Vector3)(direction * visionDistance), 0.2f);
     }
