@@ -716,7 +716,7 @@ MonoBehaviour:
   _layoutGroup: {fileID: 368483800}
   _slot: {fileID: 1973250349168769061, guid: 0ad7b9921c64af7408ee0dfdf57712f0, type: 3}
   _arrow: {fileID: 1587417430}
-  _itemCount: 64000000640000006400000064000000
+  _itemCount: 640000006400000064000000
   _player: {fileID: 365438728}
   _invincibleItemIndex: 1
   _invincibleDuration: 3
