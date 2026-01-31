@@ -30,13 +30,13 @@ public class MaskUsesController : MonoBehaviour
     }
 
     void Update() {
-        MouseScroll();
+        DetectMouseScroll();
         if (Input.GetKeyDown(KeyCode.X)) {
-            UseItem();
+            TryUseItem(_selectedIndex);
         }
     }
 
-    void MouseScroll() {
+    void DetectMouseScroll() {
         var delta = -(int)Input.mouseScrollDelta.y;
 
         switch (delta) {
@@ -46,13 +46,15 @@ public class MaskUsesController : MonoBehaviour
         }
 
         _selectedIndex += delta;
-        
+
         var slot = _layoutGroup.transform.GetChild(_selectedIndex);
         _arrow.SetParent(slot, false);
     }
 
-    void UseItem() {
-        Debug.Log(_selectedIndex);
-        _itemCount[_selectedIndex] -= 1;
+    void TryUseItem(int index) {
+        Debug.Log(index);
+
+        if (_itemCount[index] <= 0) return;
+        _itemCount[index] -= 1;
     }
 }
