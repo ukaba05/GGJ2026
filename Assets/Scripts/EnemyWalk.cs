@@ -47,7 +47,7 @@ public class EnemyWalk : MonoBehaviour, IISolationable
         // �]�w LineRenderer
         SetupLineRenderer();
 
-        _attackTarget =  1 << LayerMask.NameToLayer("Player");
+        _attackTarget = 1 << LayerMask.NameToLayer("Player");
     }
 
     void Update() {
@@ -124,27 +124,28 @@ public class EnemyWalk : MonoBehaviour, IISolationable
         }
 
         // �g�u�˴����@�d��A����I���ê���Ϊ��a
-        var origin = transform.position + (Vector3)direction ;
-        var hit =
+        var origin = transform.position + (Vector3)direction;
+        var allHits =
             Physics2D
-                .Raycast(origin, direction, visionDistance, _attackTarget);
+                .RaycastAll(origin, direction, visionDistance, _attackTarget);
 
 
         bool foundPlayer = false;
 
-        if (hit.collider != null) {
-            // ���u�������a�A�i�����
-            Debug.Log("Enemy Walk " + hit.transform.gameObject);
-            AttackPlayer(hit.collider.gameObject);
-            foundPlayer = true;
+        if (allHits != null && allHits.Length > 0) {
+            foreach (var hit in allHits) {
+                AttackPlayer(hit.transform.gameObject);
+                Debug.Log("Enemy Walk " + allHits.Length);
+                foundPlayer = true;
+            }
         }
 
+
         // ��s���u���
-        UpdateVisionLine(direction, hit, foundPlayer);
+        UpdateVisionLine(direction);
 
         // ø�s���@�d��]�Ȧb Scene ���Ϥ��i���^
-        float drawDistance = hit.collider != null ? hit.distance : visionDistance;
-        Debug.DrawRay(origin, direction * drawDistance, foundPlayer ? Color.red : Color.yellow);
+        Debug.DrawRay(origin, direction * visionDistance, foundPlayer ? Color.red : Color.yellow);
     }
 
     void AttackPlayer(GameObject player) {
@@ -200,7 +201,7 @@ public class EnemyWalk : MonoBehaviour, IISolationable
         }
     }
 
-    void UpdateVisionLine(Vector2 direction, RaycastHit2D hit, bool foundPlayer) {
+    void UpdateVisionLine(Vector2 direction) {
         if (lineRenderer == null || !showVisionLine) {
             return;
         }
@@ -209,13 +210,8 @@ public class EnemyWalk : MonoBehaviour, IISolationable
         lineRenderer.SetPosition(0, transform.position);
 
         // �]�w���I�]�p�G�I��F��A�N�e��I���I�F�_�h�e��̻��Z���^
-        Vector3 endPoint;
-        if (hit.collider != null) {
-            endPoint = hit.point;
-        }
-        else {
-            endPoint = (Vector2)transform.position + direction * visionDistance;
-        }
+        Vector3 endPoint = (Vector2)transform.position + direction * visionDistance;
+
 
         lineRenderer.SetPosition(1, endPoint);
     }
