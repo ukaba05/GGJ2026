@@ -1,7 +1,8 @@
 using System;
+using Cinemachine;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
+public class CharacterController : MonoBehaviour
 {
     [SerializeField]
     float _speed;
@@ -9,6 +10,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     Rigidbody2D _rigidbody;
 
+    [SerializeField]
+    CinemachineVirtualCamera _camera;
+    
     void Update() {
         var direction = MapInputToDirection();
         _rigidbody.velocity = direction * _speed;
@@ -27,5 +31,10 @@ public class PlayerController : MonoBehaviour
             direction += Vector2.right;
 
         return direction;
+    }
+
+    public void SetCharacter(Rigidbody2D rigidbody2D) {
+        _rigidbody     = rigidbody2D;
+        _camera.Follow = rigidbody2D.transform;
     }
 }
