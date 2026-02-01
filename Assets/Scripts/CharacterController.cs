@@ -1,5 +1,7 @@
 using Cinemachine;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CharacterController : MonoBehaviour, IDamageable
 {
@@ -39,7 +41,7 @@ public class CharacterController : MonoBehaviour, IDamageable
 
     public void Damage() {
         Instantiate(_particle, transform.position, Quaternion.identity);
-        Destroy(gameObject);
+        SceneManager.LoadScene(1);
     }
 
     public void Invincible() {
