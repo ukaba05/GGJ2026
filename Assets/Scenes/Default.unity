@@ -13087,12 +13087,12 @@ MonoBehaviour:
   _slot: {fileID: 1973250349168769061, guid: 0ad7b9921c64af7408ee0dfdf57712f0, type: 3}
   _arrow: {fileID: 1707916186}
   _itemData:
-  - sprite: {fileID: 0}
-    count: 0
-  - sprite: {fileID: 0}
-    count: 0
-  - sprite: {fileID: 0}
-    count: 0
+  - sprite: {fileID: 21300000, guid: d3268465167b5554993adba17644b7bc, type: 3}
+    count: 100
+  - sprite: {fileID: 21300000, guid: a54b688038431a740acbbfffc52490bf, type: 3}
+    count: 100
+  - sprite: {fileID: 21300000, guid: 789af4a94a50e3643b9a49522005e5ff, type: 3}
+    count: 100
   _player: {fileID: 1595462962}
   _invincibleDuration: 3
   _blinkInterval: 0.1

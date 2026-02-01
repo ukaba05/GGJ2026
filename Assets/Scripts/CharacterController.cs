@@ -15,6 +15,8 @@ public class CharacterController : MonoBehaviour, IDamageable
     [SerializeField]
     ParticleSystem _particle;
 
+    public bool IsInvincible { get; private set; }
+
     void FixedUpdate() {
         var direction = MapInputToDirection();
         _rigidbody.velocity = direction * _speed;
@@ -35,13 +37,18 @@ public class CharacterController : MonoBehaviour, IDamageable
         return direction;
     }
 
-    public void SetCharacter(Rigidbody2D rigidbody2D) {
-        _rigidbody     = rigidbody2D;
-        _camera.Follow = rigidbody2D.transform;
-    }
-
     public void Damage() {
         Instantiate(_particle, transform.position, Quaternion.identity);
         Destroy(gameObject);
+    }
+
+    public void Invincible() {
+        _rigidbody.excludeLayers = 1 << LayerMask.NameToLayer("Enemy");
+        IsInvincible             = true;
+    }
+
+    public void Uninvincible() {
+        _rigidbody.excludeLayers = 0;
+        IsInvincible             = false;
     }
 }

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class EnemyPatrolCircle : MonoBehaviour, IIsolationable, IDamageable
@@ -123,17 +124,22 @@ public class EnemyPatrolCircle : MonoBehaviour, IIsolationable, IDamageable
         // �ϥ� OverlapCircle �˴���νd�򤺪��Ҧ��I����
         Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, detectionRadius, _attackTarget);
 
-        var foundPlayer = false;
+        var validColliders =
+            hitColliders
+                .Where(h => h.transform != transform)
+                .Where(h => {
+                    return !(h.TryGetComponent<CharacterController>(out var component) &&
+                             component.IsInvincible);
+                })
+                .ToList();
 
-        if (hitColliders != null && hitColliders.Length > 0) {
-            foreach (Collider2D hitCollider in hitColliders.Where(h => h.transform != transform)) {
-                if (hitCollider != null) {
-                    // �����쪱�a�A�i�����
-                    if (hitCollider.transform.gameObject.layer == LayerMask.NameToLayer("Player")) foundPlayer = true;
-                    Debug.Log("Enemy Patrol Circle �o�{���a�I");
-                    Attack(hitCollider.gameObject);
-                }
+        if (validColliders.Any()) {
+            foreach (Collider2D hitCollider in validColliders) {
+                Debug.Log("Enemy Patrol Circle �o�{���a�I");
+                Attack(hitCollider.gameObject);
             }
+
+            Damage();
         }
 
         // ��s������
@@ -208,7 +214,7 @@ public class EnemyPatrolCircle : MonoBehaviour, IIsolationable, IDamageable
         DrawCircle();
     }
 
-    // �b Scene ���Ϥ�ø�s�����d��
+// �b Scene ���Ϥ�ø�s�����d��
     void OnDrawGizmosSelected() {
         // �ھڲ��ʶb�V�M�w�˴���V�]�������˴��^
         Vector2 direction;

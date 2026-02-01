@@ -716,9 +716,14 @@ MonoBehaviour:
   _layoutGroup: {fileID: 368483800}
   _slot: {fileID: 1973250349168769061, guid: 0ad7b9921c64af7408ee0dfdf57712f0, type: 3}
   _arrow: {fileID: 1587417430}
-  _itemCount: 640000006400000064000000
+  _itemData:
+  - sprite: {fileID: 0}
+    count: 0
+  - sprite: {fileID: 0}
+    count: 0
+  - sprite: {fileID: 0}
+    count: 0
   _player: {fileID: 365438728}
-  _invincibleItemIndex: 1
   _invincibleDuration: 3
   _blinkInterval: 0.1
   _invincibleColor: {r: 1, g: 1, b: 1, a: 0.5}

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -165,7 +164,8 @@ public class MaskUsesController : MonoBehaviour
     /// 無敵狀態協程
     /// </summary>
     IEnumerator InvincibilityCoroutine() {
-        _isInvincible = true;
+        var playerController = _player.GetComponent<CharacterController>();
+        playerController.Invincible();
         Debug.Log("⭐ 無敵狀態啟動！");
 
         float elapsed = 0f;
@@ -192,7 +192,10 @@ public class MaskUsesController : MonoBehaviour
             _playerRenderer.color = _originalColor;
         }
 
-        _isInvincible = false;
+        if (playerController != null) {
+            playerController.Uninvincible();
+        }
+
         Debug.Log("⭐ 無敵狀態結束！");
     }
 

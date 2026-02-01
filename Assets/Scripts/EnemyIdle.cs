@@ -42,18 +42,26 @@ public class EnemyIdle : MonoBehaviour, IIsolationable, IDamageable
         // �ϥ� OverlapCircle �˴���νd�򤺪��Ҧ��I����
         Collider2D[] hitColliders = Physics2D.OverlapCircleAll(transform.position, detectionRadius, _attackTarget);
 
-        bool foundPlayer = false;
+        var validColliders =
+            hitColliders
+                .Where(h => h.transform != transform)
+                .Where(h => {
+                    return !(h.TryGetComponent<CharacterController>(out var component) &&
+                             component.IsInvincible);
+                })
+                .ToList();
 
-        if (hitColliders != null && hitColliders.Length > 0) {
-            foreach (Collider2D hitCollider in hitColliders.Where(h => h.transform != transform)) {
-                if (hitCollider.transform.gameObject.layer == LayerMask.NameToLayer("Player")) foundPlayer = true;
-                Debug.Log("Enemy Idle �o�{���a�I��ڰ����b�|: " + detectionRadius);
+        if (validColliders.Any()) {
+            foreach (Collider2D hitCollider in validColliders) {
+                Debug.Log("Enemy Patrol Circle �o�{���a�I");
                 Attack(hitCollider.gameObject);
             }
+
+            Damage();
         }
 
         // ��s������
-        UpdateCircleDisplay(foundPlayer);
+        UpdateCircleDisplay();
     }
 
     void Attack(GameObject target) {
@@ -115,7 +123,7 @@ public class EnemyIdle : MonoBehaviour, IIsolationable, IDamageable
         }
     }
 
-    void UpdateCircleDisplay(bool foundPlayer) {
+    void UpdateCircleDisplay() {
         if (!showDetectionCircle) {
             return;
         }
@@ -125,7 +133,7 @@ public class EnemyIdle : MonoBehaviour, IIsolationable, IDamageable
 
         // ��s�C��
         if (lineRenderer != null) {
-            Color currentColor = foundPlayer ? attackCircleColor : normalCircleColor;
+            Color currentColor = normalCircleColor;
             lineRenderer.startColor = currentColor;
             lineRenderer.endColor   = currentColor;
         }
