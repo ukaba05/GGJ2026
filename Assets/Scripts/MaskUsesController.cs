@@ -19,14 +19,10 @@ public class MaskUsesController : MonoBehaviour
     Transform _arrow;
 
     [SerializeField]
-    int[] _itemCount;
+    ItemData[] _itemData;
 
     [SerializeField]
     GameObject _player;
-
-
-    [SerializeField]
-    int _invincibleItemIndex = 1;
 
     [SerializeField]
     float _invincibleDuration = 3f; // 無敵持續時間
@@ -44,10 +40,12 @@ public class MaskUsesController : MonoBehaviour
 
     void Awake() {
         var instance = Instantiate(_slot, _layoutGroup.transform);
+        instance.GetComponent<Image>().sprite = _itemData[0].sprite;
         _arrow.SetParent(instance);
 
-        foreach (var count in _itemCount.Skip(1)) {
-            Instantiate(_slot, _layoutGroup.transform);
+        for (var i = 1; i < _itemData.Length; i++) {
+            instance                              = Instantiate(_slot, _layoutGroup.transform);
+            instance.GetComponent<Image>().sprite = _itemData[i].sprite;
         }
 
         _arrow.localPosition = Vector2.up * 80;
@@ -104,13 +102,13 @@ public class MaskUsesController : MonoBehaviour
         Debug.Log($"嘗試使用格子 {index} 的道具");
 
         // 檢查道具數量是否足夠
-        if (_itemCount[index] <= 0) {
+        if (_itemData[index].count <= 0) {
             Debug.Log($"格子 {index} 沒有道具了！");
 
             return;
         }
 
-        _itemCount[index] -= 1;
+        _itemData[index].count -= 1;
 
         if (index == 0) {
             Investigation();
@@ -119,15 +117,15 @@ public class MaskUsesController : MonoBehaviour
         }
 
         // 檢查是否是無敵道具格子
-        if (index == _invincibleItemIndex) {
+        if (index == 1) {
             // 使用無敵道具
-            Debug.Log($"使用無敵道具！剩餘數量: {_itemCount[index]}");
+            Debug.Log($"使用無敵道具！剩餘數量: {_itemData[index]}");
             ActivateInvincibility();
 
             return;
         }
 
-        if (index == 3) {
+        if (index == 2) {
             DoIsolation();
         }
 
@@ -198,41 +196,10 @@ public class MaskUsesController : MonoBehaviour
         Debug.Log("⭐ 無敵狀態結束！");
     }
 
-    /// <summary>
-    /// 檢查是否處於無敵狀態（供其他腳本調用）
-    /// </summary>
-    public bool IsInvincible() {
-        return _isInvincible;
-    }
-
-    /// <summary>
-    /// 受到傷害時調用此方法（供敵人腳本調用）
-    /// </summary>
-    public bool TakeDamage(int damage) {
-        if (_isInvincible) {
-            Debug.Log("🛡️ 無敵中，免疫傷害！");
-
-            return false; // 無敵時不受傷
-        }
-
-        return true; // 受傷成功
-    }
-
-    /// <summary>
-    /// 獲取當前選中的格子索引（供 UI 顯示用）
-    /// </summary>
-    public int GetSelectedIndex() {
-        return _selectedIndex;
-    }
-
-    /// <summary>
-    /// 獲取指定格子的道具數量（供 UI 顯示用）
-    /// </summary>
-    public int GetItemCount(int index) {
-        if (index >= 0 && index < _itemCount.Length) {
-            return _itemCount[index];
-        }
-
-        return 0;
+    [Serializable]
+    public struct ItemData
+    {
+        public Sprite sprite;
+        public int    count;
     }
 }

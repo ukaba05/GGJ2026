@@ -13086,9 +13086,14 @@ MonoBehaviour:
   _layoutGroup: {fileID: 606965464}
   _slot: {fileID: 1973250349168769061, guid: 0ad7b9921c64af7408ee0dfdf57712f0, type: 3}
   _arrow: {fileID: 1707916186}
-  _itemCount: 64000000640000006400000064000000
-  _player: {fileID: 0}
-  _invincibleItemIndex: 1
+  _itemData:
+  - sprite: {fileID: 0}
+    count: 0
+  - sprite: {fileID: 0}
+    count: 0
+  - sprite: {fileID: 0}
+    count: 0
+  _player: {fileID: 1595462962}
   _invincibleDuration: 3
   _blinkInterval: 0.1
   _invincibleColor: {r: 1, g: 1, b: 1, a: 0.5}
@@ -15912,6 +15917,11 @@ Transform:
   - {fileID: 1832362281}
   m_Father: {fileID: 1846033908}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1595462962 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4722323200737043586, guid: 4b35b5712c473d9438a69536d4c13d27, type: 3}
+  m_PrefabInstance: {fileID: 713976776}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1614289447
 GameObject:
   m_ObjectHideFlags: 0
