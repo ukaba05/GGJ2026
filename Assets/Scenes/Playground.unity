@@ -718,11 +718,11 @@ MonoBehaviour:
   _arrow: {fileID: 1587417430}
   _itemData:
   - sprite: {fileID: 0}
-    count: 0
+    count: 100
   - sprite: {fileID: 0}
-    count: 0
+    count: 100
   - sprite: {fileID: 0}
-    count: 0
+    count: 100
   _player: {fileID: 365438728}
   _invincibleDuration: 3
   _blinkInterval: 0.1
@@ -1185,7 +1185,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8878184861005022667, guid: bb0575706941c5f47a887e3373d55c84, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.14
+      value: -4.21
       objectReference: {fileID: 0}
     - target: {fileID: 8878184861005022667, guid: bb0575706941c5f47a887e3373d55c84, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1356,7 +1356,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4056473313352203414, guid: 19d9c0ae48dd6a94fb8233487f918876, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.13
+      value: -4.3
       objectReference: {fileID: 0}
     - target: {fileID: 4056473313352203414, guid: 19d9c0ae48dd6a94fb8233487f918876, type: 3}
       propertyPath: m_LocalPosition.z

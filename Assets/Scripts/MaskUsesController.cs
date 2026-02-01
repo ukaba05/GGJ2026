@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -18,6 +19,9 @@ public class MaskUsesController : MonoBehaviour
     Transform _arrow;
 
     [SerializeField]
+    TMP_Text _text;
+
+    [SerializeField]
     ItemData[] _itemData;
 
     [SerializeField]
@@ -32,19 +36,23 @@ public class MaskUsesController : MonoBehaviour
     [SerializeField]
     Color _invincibleColor = new Color(1f, 1f, 1f, 0.5f); // 無敵時的顏色
 
-    int            _selectedIndex;
+    int       _selectedIndex;
+    Transform _selectedSlot;
+
     bool           _isInvincible = false;
     SpriteRenderer _playerRenderer;
     Color          _originalColor;
 
     void Awake() {
         var instance = Instantiate(_slot, _layoutGroup.transform);
-        instance.GetComponent<Image>().sprite = _itemData[0].sprite;
+        instance.GetComponent<Image>().sprite            = _itemData[0].sprite;
+        instance.GetComponentInChildren<TMP_Text>().text = _itemData[0].count.ToString();
         _arrow.SetParent(instance);
 
         for (var i = 1; i < _itemData.Length; i++) {
-            instance                              = Instantiate(_slot, _layoutGroup.transform);
-            instance.GetComponent<Image>().sprite = _itemData[i].sprite;
+            instance                                         = Instantiate(_slot, _layoutGroup.transform);
+            instance.GetComponent<Image>().sprite            = _itemData[i].sprite;
+            instance.GetComponentInChildren<TMP_Text>().text = _itemData[i].count.ToString();
         }
 
         _arrow.localPosition = Vector2.up * 80;
@@ -93,8 +101,9 @@ public class MaskUsesController : MonoBehaviour
         }
 
         _selectedIndex += delta;
-        var slot = _layoutGroup.transform.GetChild(_selectedIndex);
-        _arrow.SetParent(slot, false);
+        _selectedSlot  =  _layoutGroup.transform.GetChild(_selectedIndex);
+        _arrow.SetParent(_selectedSlot, false);
+        _text.text = _itemData[_selectedIndex].statement;
     }
 
     void TryUseItem(int index) {
@@ -107,7 +116,8 @@ public class MaskUsesController : MonoBehaviour
             return;
         }
 
-        _itemData[index].count -= 1;
+        _itemData[index].count                                -= 1;
+        _selectedSlot.GetComponentInChildren<TMP_Text>().text =  _itemData[index].count.ToString();
 
         if (index == 0) {
             Investigation();
@@ -142,7 +152,7 @@ public class MaskUsesController : MonoBehaviour
             var worldPoint = _camera.ScreenToWorldPoint(Input.mousePosition);
             worldPoint = new Vector3(worldPoint.x, worldPoint.y, 0);
             var overlapPoint = Physics2D.OverlapPoint(worldPoint, LayerMask.GetMask("Enemy"));
-            if (overlapPoint.TryGetComponent<LineRenderer>(out var component)) {
+            if (overlapPoint && overlapPoint.TryGetComponent<LineRenderer>(out var component)) {
                 component.enabled = true;
             }
         }
@@ -204,5 +214,6 @@ public class MaskUsesController : MonoBehaviour
     {
         public Sprite sprite;
         public int    count;
+        public string statement;
     }
 }
