@@ -1,3 +1,5 @@
+using System.Linq;
+using Cinemachine;
 using UnityEngine;
 
 public class EnemyStaticVision : MonoBehaviour, IIsolationable, IDamageable
@@ -100,19 +102,31 @@ public class EnemyStaticVision : MonoBehaviour, IIsolationable, IDamageable
         var obstacleLayerMask = 1 << LayerMask.NameToLayer("obstacle");
         var hitObstacle       = Physics2D.Raycast(origin, direction, visionDistance, obstacleLayerMask);
         var realDistance      = hitObstacle ? hitObstacle.distance : visionDistance;
-        var allHits =
+
+        var validHit =
             Physics2D
-                .RaycastAll(origin, direction, realDistance, _attackTarget);
+                .RaycastAll(origin, direction, realDistance, _attackTarget)
+                .Where(h => {
+                    return !(h.transform.TryGetComponent<CharacterController>(out var component) &&
+                             component.IsInvincible);
+                })
+                .ToList();
 
 
         bool foundPlayer = false;
-
-        if (allHits != null && allHits.Length > 0) {
-            foreach (var hit in allHits) {
+        if (validHit.Any()) {
+            foreach (var hit in validHit) {
                 if (hit.transform.gameObject.layer == LayerMask.NameToLayer("Player")) foundPlayer = true;
                 Attack(hit.transform.gameObject);
-                Debug.Log("Enemy Static " + allHits.Length);
             }
+
+            if (foundPlayer) {
+                FindAnyObjectByType<CinemachineVirtualCamera>().Follow = transform;
+
+                return;
+            }
+
+            Damage();
         }
 
         // ��s���u���
